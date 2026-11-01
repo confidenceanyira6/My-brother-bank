@@ -136,6 +136,15 @@ label.l{display:block;font-size:12.5px;font-weight:600;margin:4px 0 6px;color:#3
 .setrow:last-child{border:0}.setrow .grow{flex:1}
 .det{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px 18px;font-size:13px}
 .det small{display:block;color:var(--mut);font-size:11.5px}
+.eg{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:0 16px}
+.eg .field{margin-bottom:10px}
+.ulink{background:none;color:var(--blue2);font-weight:600;text-align:left;font-size:13px;padding:0}
+.ulink:hover{text-decoration:underline}
+.ph{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.ph .grow{flex:1;min-width:200px}
+.danger{background:var(--red);color:#fff;padding:10px 14px;border-radius:8px;font-weight:600;font-size:13px}
+.ph h1{font-size:20px}
+.ptitle{font-weight:600;font-size:15px;margin-bottom:12px;display:flex;align-items:center;gap:8px;color:var(--navy)}
 .alogin{min-height:100vh;display:grid;place-items:center;padding:16px}
 .abox{background:#fff;border-radius:18px;padding:30px;width:100%;max-width:380px;text-align:center;border:3px solid #19b36b}
 .abox .logo{background:var(--green)}
@@ -263,7 +272,7 @@ const readSet=()=>new Set(load('mb_read:'+sess.email,[]));
 const unread=()=>{const r=readSet();return myNotes().filter(n=>!r.has(n.id)).length};
 /* Demo customer counts as verified; everyone else follows the status on their KYC record. */
 const kycOf=()=>{const k=kyc.find(x=>x.e===sess.email);return k?k.s:'Verified'};
-const myPin=()=>sess.email===DEMO.customer.email?DEMO.customer.pin:(reg.find(r=>r.email===sess.email)||{}).pin;
+const myPin=()=>{const r=reg.find(x=>x.email===sess.email);return r&&r.pin?r.pin:(sess.email===DEMO.customer.email?DEMO.customer.pin:undefined)};
 
 /* ============ COUNTRIES / CITIES ============ */
 const COUNTRIES={
@@ -444,7 +453,42 @@ const ALINKS=[['dashboard','chart','Dashboard'],['users','users','Users'],['txns
 const ashell=(act,title,body)=>{const p=pend();return `<div class="adm"><aside class="side ${ui.nav?'open':''}"><h3><span class="logo" style="width:30px;height:30px;border-radius:8px;background:#fff"><svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:#0f8a4b">${BANK.replace(/<\/?svg[^>]*>/g,'')}</svg></span>MyBank Admin</h3>${ALINKS.map(l=>`<button class="${act===l[0]?'on':''}" onclick="ui.nav=false;go('#/admin/${l[0]}')">${I(l[1],18)}${l[2]}${l[3]&&p[l[3]]?`<span class="cnt">${p[l[3]]}</span>`:''}</button>`).join('')}<button onclick="logout()">${I('logout',18)}Logout</button></aside><div class="main"><div class="mtop"><button class="burger" onclick="ui.nav=!ui.nav;render()">☰</button><h1 style="font-size:22px">${title}</h1></div>${body}</div></div>`};
 
 R['admin/dashboard']=()=>{const p=pend();return ashell('dashboard','Dashboard',`<div class="stats"><div class="stat"><span class="ico">${I('users',20)}</span><div><span class="sub">Total Users</span><b>2,445,200</b></div></div><div class="stat"><span class="ico">${I('swap',20)}</span><div><span class="sub">Total Transactions</span><b>12,450</b></div></div><div class="stat" style="cursor:pointer" onclick="go('#/admin/withdrawals')"><span class="ico">${I('withdraw',20)}</span><div><span class="sub">Pending Withdrawals</span><b>${p.w}</b></div></div><div class="stat" style="cursor:pointer" onclick="go('#/admin/loans')"><span class="ico">${I('loan',20)}</span><div><span class="sub">Pending Loans</span><b>${p.l}</b></div></div><div class="stat" style="cursor:pointer" onclick="go('#/admin/support')"><span class="ico">${I('support',20)}</span><div><span class="sub">Open Support Tickets</span><b>${p.c}</b></div></div></div><div class="panel"><b>User Growth</b><div class="sub">Last 30 days</div><svg viewBox="0 0 400 140" style="width:100%;margin-top:10px"><defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0f8a4b" stop-opacity=".35"/><stop offset="1" stop-color="#0f8a4b" stop-opacity="0"/></linearGradient></defs><path d="M0 120 L40 110 L80 114 L120 90 L160 96 L200 70 L240 76 L280 48 L320 54 L360 28 L400 20 L400 140 L0 140Z" fill="url(#g)"/><path d="M0 120 L40 110 L80 114 L120 90 L160 96 L200 70 L240 76 L280 48 L320 54 L360 28 L400 20" fill="none" stroke="#0f8a4b" stroke-width="3"/></svg></div>`)};
-R['admin/users']=()=>{const q=ui.q.toLowerCase();return ashell('users','Users',`<div class="panel"><div class="sbar"><input placeholder="Search user..." value="${esc(ui.q)}" oninput="ui.q=this.value;render(true)" id="usr_q"><button class="gbtn" onclick="addUser()">+ Add User</button></div><div class="tblwrap"><table class="tbl"><tr><th>Name</th><th>Email</th><th>Status</th><th>Actions</th></tr>${users.map((u,i)=>[u,i]).filter(([u])=>(u.n+u.e).toLowerCase().includes(q)).map(([u,i])=>`<tr><td>${esc(u.n)}</td><td>${esc(u.e)}</td><td>${pill(u.s)}</td><td><button class="mini" onclick="toggleUser(${i})">${u.s==='Active'?'Suspend':'Activate'}</button></td></tr>`).join('')}</table></div></div>`)};
+/* ---- admin: user helpers ---- */
+const stub=e=>{const u=users.find(x=>x.e===e)||{};const d=e===DEMO.customer.email;return{name:u.n||'',email:e,phone:'',pw:d?DEMO.customer.password:'',pin:d?DEMO.customer.pin:'',dob:'',gender:'',taxLast4:'',occupation:'',country:'',city:'',zip:'',address:'',nok:{name:'',email:'',phone:'',relationship:'',address:''},currency:'USD',docType:'',photoName:'',docName:''}};
+const profile=e=>reg.find(r=>r.email===e)||stub(e);
+const kycRec=e=>{const u=users.find(x=>x.e===e)||{};return kyc.find(k=>k.e===e)||kyc.find(k=>!k.e&&k.u===u.n)};
+const AF=(id,l,v,t='text',x='')=>`<div><label class="l" for="${id}">${l}</label><input class="field" id="${id}" type="${t}" value="${esc(v)}" ${x}></div>`;
+const AS=(id,l,opts,val)=>{const o=opts.map(p=>Array.isArray(p)?p:[p,p]);if(val&&!o.some(p=>p[0]===val))o.unshift([val,val]);return `<div><label class="l" for="${id}">${l}</label><select class="field" id="${id}">${o.map(p=>`<option value="${esc(p[0])}" ${p[0]===val?'selected':''}>${esc(p[1])}</option>`).join('')}</select></div>`};
+function openUser(e){ui.uemail=e;go('#/admin/user')}
+
+R['admin/users']=()=>{const q=ui.q.toLowerCase();
+ const rows=users.map((u,i)=>[u,i]).filter(([u])=>(u.n+u.e+(profile(u.e).phone||'')).toLowerCase().includes(q));
+ return ashell('users','Users',`<div class="panel"><div class="sbar"><input placeholder="Search by name, email or phone..." value="${esc(ui.q)}" oninput="ui.q=this.value;render(true)" id="usr_q"><button class="gbtn" onclick="addUser()">+ Add User</button></div><div class="sub" style="margin-bottom:10px">Click a customer to see and edit everything about their account.</div><div class="tblwrap"><table class="tbl"><tr><th>Name</th><th>Email</th><th>Phone</th><th>Balance</th><th>KYC</th><th>Status</th><th>Actions</th></tr>${rows.map(([u,i])=>{const p=profile(u.e),k=kycRec(u.e),ks=k?k.s:'Verified';return `<tr><td><button class="ulink" onclick="openUser('${esc(u.e)}')">${esc(u.n)}</button></td><td>${esc(u.e)}</td><td>${esc(p.phone)||'—'}</td><td><b>${fmt(walletOf(u.e).balance,p.currency||'USD')}</b></td><td>${pill(ks)}</td><td>${pill(u.s)}</td><td><button class="mini" onclick="openUser('${esc(u.e)}')">View / Edit</button><button class="mini" onclick="toggleUser(${i})">${u.s==='Active'?'Suspend':'Activate'}</button></td></tr>`}).join('')||'<tr><td colspan="7" class="sub">No users match.</td></tr>'}</table></div></div>`)};
+
+R['admin/user']=()=>{
+ const e=ui.uemail,u=users.find(x=>x.e===e);if(!u){go('#/admin/users');return ''}
+ const p=profile(e),w=walletOf(e),k=kycRec(e),cs=load('mb_cards:'+e,[]),cur=p.currency||'USD',ks=k?k.s:'Verified';
+ const myW=wds.filter(x=>x.e===e).slice().reverse(),myL=loans.filter(x=>x.e===e).slice().reverse(),myC=care.filter(x=>x.e===e).slice().reverse(),myN=notes.filter(x=>x.to===e).slice().reverse();
+ const nk=p.nok||{};
+ return ashell('users',esc(u.n),`
+<div class="ph"><button class="mini" onclick="go('#/admin/users')">← All users</button><div class="grow"><h1>${esc(u.n)}</h1><div class="sub">${esc(e)}${p.created?' · joined '+fdt(p.created):''}</div></div>${pill(u.s)}${pill(ks)}<button class="gbtn" form="uf">Save changes</button></div>
+<div class="stats"><div class="stat"><span class="ico">${I('bank',20)}</span><div><span class="sub">Account balance</span><b>${fmt(w.balance,cur)}</b></div></div><div class="stat"><span class="ico">${I('swap',20)}</span><div><span class="sub">Transactions</span><b>${w.tx.length}</b></div></div><div class="stat"><span class="ico">${I('withdraw',20)}</span><div><span class="sub">Withdrawals</span><b>${myW.length}</b></div></div><div class="stat"><span class="ico">${I('loan',20)}</span><div><span class="sub">Loans</span><b>${myL.length}</b></div></div></div>
+<form id="uf" onsubmit="return saveUser(event,'${esc(e)}')" autocomplete="off">
+<div class="panel"><div class="ptitle">${I('user',18)}Personal information</div><div class="eg">${AF('uf_n','Name',p.name||u.n,'text','required maxlength="80"')}${AF('uf_e','Email',e,'email','required maxlength="120"')}${AF('uf_p','Phone',p.phone,'tel','maxlength="20"')}${AF('uf_dob','Date of birth',p.dob,'date')}${AS('uf_g','Gender',['','Male','Female','Other','Prefer not to say'],p.gender)}${AF('uf_ssn','Tax ID / SSN (last 4)',p.taxLast4,'text','maxlength="20"')}${AF('uf_occ','Occupation',p.occupation,'text','maxlength="60"')}${AS('uf_st','Account status',['Active','Suspended'],u.s)}</div></div>
+<div class="panel"><div class="ptitle">${I('home',18)}Contact information</div><div class="eg">${AF('uf_c','Country',p.country)}${AF('uf_ci','City',p.city)}${AF('uf_z','ZIP',p.zip)}${AF('uf_a','Address',p.address)}</div></div>
+<div class="panel"><div class="ptitle">${I('users',18)}Next of kin</div><div class="eg">${AF('uf_kn','Name',nk.name)}${AF('uf_ke','Email',nk.email,'email')}${AF('uf_kp','Phone',nk.phone,'tel')}${AF('uf_kr','Relationship',nk.relationship)}${AF('uf_ka','Address',nk.address)}</div></div>
+<div class="panel"><div class="ptitle">${I('lock',18)}Account and balance</div><div class="eg">${AS('uf_cur','Account currency',CURRENCIES,cur)}${AF('uf_bal','Account balance ('+esc((SYM[cur]||cur+' ').trim())+')',w.balance.toFixed(2),'number','step="0.01" min="0"')}${AF('uf_pw','Password',p.pw,'text','autocomplete="off"')}${AF('uf_pin','Transaction PIN',p.pin,'text','maxlength="4" inputmode="numeric" autocomplete="off"')}</div><label style="display:flex;gap:8px;align-items:center;font-size:13px;margin:2px 0 8px"><input type="checkbox" id="uf_bn" checked> Notify the customer if I change their balance</label><div class="sub">Changing the balance adds an "admin adjustment" entry to their history. Changing the currency does not convert the balance. Passwords and PINs are stored in plain text in this demo.</div></div>
+<div class="panel"><div class="ptitle">${I('id',18)}KYC verification</div><div class="eg">${AS('uf_ks','KYC status',['Pending','Verified','Rejected'],ks)}${AS('uf_dt','Identification type',['','Passport ID','National ID','Bank Statement','Utility Bill','ID Card','Passport','Driver License'],p.docType||(k?k.t:''))}${AF('uf_pf','Passport photograph (file name)',p.photoName)}${AF('uf_df','Identity document (file name)',p.docName)}</div><div class="sub">Uploaded files are not stored in this demo, only their names.</div></div>
+<div id="uf_err" class="err" role="alert"></div>
+<div style="display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap"><button class="gbtn">Save changes</button><button type="button" class="danger" onclick="deleteUser('${esc(e)}')">Delete user</button></div>
+</form>
+<div class="panel"><div class="ptitle">${I('swap',18)}Transaction history</div><div class="sub" style="margin-bottom:10px">Editing a transaction changes the record only. It does not change the balance.</div><div class="tblwrap"><table class="tbl"><tr><th>Description</th><th>Date</th><th>Amount (+ in / − out)</th><th>Status</th><th></th></tr>${w.tx.map((t,i)=>`<tr><td><input class="field" style="margin:0;min-width:160px" id="tx_n${i}" value="${esc(t.n)}"></td><td><input class="field" style="margin:0;min-width:110px" id="tx_d${i}" value="${esc(t.d)}"></td><td><input class="field" style="margin:0;width:120px" id="tx_a${i}" type="number" step="0.01" value="${t.a}"></td><td><select class="field" style="margin:0;min-width:120px" id="tx_s${i}">${['Completed','Pending','Rejected'].map(s=>`<option ${(t.s||'Completed')===s?'selected':''}>${s}</option>`).join('')}</select></td><td style="white-space:nowrap"><button class="mini" onclick="saveTx(${i})">Save</button><button class="mini" style="color:var(--red)" onclick="delTx(${i})">Delete</button></td></tr>`).join('')||'<tr><td colspan="5" class="sub">No transactions yet.</td></tr>'}</table></div>
+<div class="sbar" style="margin:14px 0 0;align-items:center"><input id="ntx_n" placeholder="New entry description" maxlength="80"><input id="ntx_a" type="number" step="0.01" placeholder="Amount (negative = debit)"><label style="font-size:13px;display:flex;gap:6px;align-items:center"><input type="checkbox" id="ntx_b"> Apply to balance</label><button class="gbtn" onclick="addTx()">Add entry</button></div></div>
+<div class="panel"><div class="ptitle">${I('withdraw',18)}Withdrawals</div><div class="tblwrap"><table class="tbl"><tr><th>ID</th><th>Amount</th><th>Payout details</th><th>Date</th><th>Status</th><th>Action</th></tr>${myW.map(x=>`<tr><td>${x.id}</td><td><b>${fmt(x.amt,x.cur)}</b></td><td>${esc(x.bank)} · ${esc(x.acct)}<br>${esc(x.holder)}</td><td>${esc(x.date)}</td><td>${pill(x.s)}</td><td>${x.s==='Pending'?`<button class="mini" onclick="wdSet('${x.id}','Completed')">Approve</button><button class="mini" onclick="wdSet('${x.id}','Rejected')">Reject</button>`:'—'}</td></tr>`).join('')||'<tr><td colspan="6" class="sub">No withdrawals.</td></tr>'}</table></div></div>
+<div class="panel"><div class="ptitle">${I('loan',18)}Loans</div><div class="tblwrap"><table class="tbl"><tr><th>ID</th><th>Amount</th><th>Term</th><th>Purpose</th><th>Date</th><th>Status</th><th>Action</th></tr>${myL.map(x=>`<tr><td>${x.id}</td><td><b>${fmt(x.amt,x.cur)}</b></td><td>${x.months} mo</td><td>${esc(x.purpose)}</td><td>${esc(x.date)}</td><td>${pill(x.s)}</td><td>${x.s==='Pending'?`<button class="mini" onclick="loanSet('${x.id}','Approved')">Approve</button><button class="mini" onclick="loanSet('${x.id}','Rejected')">Reject</button>`:'—'}</td></tr>`).join('')||'<tr><td colspan="7" class="sub">No loans.</td></tr>'}</table></div></div>
+<div class="panel"><div class="ptitle">${I('card',18)}Saved cards</div><div class="tblwrap"><table class="tbl"><tr><th>Brand</th><th>Last 4</th><th>Holder</th><th>Expiry</th><th></th></tr>${cs.map((c,i)=>`<tr><td>${esc(c.brand)}</td><td>•••• ${esc(c.last4)}</td><td><input class="field" style="margin:0" id="cd_h${i}" value="${esc(c.holder)}"></td><td><input class="field" style="margin:0;width:90px" id="cd_x${i}" value="${esc(c.exp)}"></td><td style="white-space:nowrap"><button class="mini" onclick="saveCardA(${i})">Save</button><button class="mini" style="color:var(--red)" onclick="delCardA(${i})">Remove</button></td></tr>`).join('')||'<tr><td colspan="5" class="sub">No saved cards.</td></tr>'}</table></div></div>
+<div class="panel"><div class="ptitle">${I('support',18)}Support messages</div>${myC.map(c=>`<div class="nt"><div class="ntt"><b>${esc(c.subject)}</b>${pill(c.s)}</div><p>${esc(c.msg)}</p>${c.reply?`<div class="reply">${esc(c.reply)}</div>`:''}<div style="margin-top:8px"><button class="mini" onclick="replyCare('${c.id}')">${c.reply?'Reply again':'Reply'}</button></div></div>`).join('')||'<div class="sub">No messages.</div>'}</div>
+<div class="panel"><div class="ptitle">${I('bell',18)}Notifications</div><form onsubmit="return sendUserNote(event,'${esc(e)}')" style="max-width:560px;margin-bottom:14px"><label class="l">Title</label><input class="field" id="un_t" maxlength="80" required><label class="l">Message</label><textarea class="field" id="un_m" rows="3" maxlength="600" required></textarea><button class="gbtn">Send to ${esc(first(u.n))}</button></form>${myN.map(n=>`<div class="nt"><div class="ntt"><b>${esc(n.title)}</b><small>${fdt(n.date)}</small></div><p>${esc(n.body)}</p><div style="margin-top:6px"><button class="mini" style="color:var(--red)" onclick="delNote('${n.id}')">Delete</button></div></div>`).join('')||'<div class="sub">No notifications sent to this customer.</div>'}</div>`)};
 R['admin/txns']=()=>{const f=atx.filter(t=>ui.ttype==='All Types'||t.t===ui.ttype);return ashell('txns','Transactions',`<div class="panel"><div class="sbar"><select onchange="ui.ttype=this.value;render()">${['All Types','Deposit','Transfer','Withdrawal'].map(o=>`<option ${o===ui.ttype?'selected':''}>${o}</option>`).join('')}</select><select><option>Today</option><option>This week</option><option>This month</option></select></div><div class="tblwrap"><table class="tbl"><tr><th>ID</th><th>User</th><th>Type</th><th>Amount</th><th>Status</th></tr>${f.map(t=>`<tr><td>${t.id}</td><td>${esc(t.u)}</td><td>${t.t}</td><td class="${t.a>0?'pos':'neg'}">${t.a>0?'+':'-'}${fmt(Math.abs(t.a),'USD')}</td><td>${pill(t.s)}</td></tr>`).join('')}</table></div></div>`)};
 R['admin/withdrawals']=()=>ashell('withdrawals','Withdrawal Requests',`<div class="panel"><div class="tblwrap"><table class="tbl"><tr><th>ID</th><th>Customer</th><th>Amount</th><th>Payout Details</th><th>Date</th><th>Status</th><th>Action</th></tr>${wds.length?wds.slice().reverse().map(w=>`<tr><td>${w.id}</td><td>${esc(w.u)}<br><span class="sub">${esc(w.e)}</span></td><td><b>${fmt(w.amt,w.cur)}</b></td><td>${esc(w.bank)}<br>${esc(w.acct)}<br>${esc(w.holder)}${w.code?'<br>Code: '+esc(w.code):''}${w.note?'<br><span class="sub">'+esc(w.note)+'</span>':''}</td><td>${esc(w.date)}</td><td>${pill(w.s)}</td><td>${w.s==='Pending'?`<button class="mini" onclick="wdSet('${w.id}','Completed')">Approve</button><button class="mini" onclick="wdSet('${w.id}','Rejected')">Reject</button>`:'—'}</td></tr>`).join(''):'<tr><td colspan="7" class="sub">No withdrawal requests yet.</td></tr>'}</table></div></div>`);
 R['admin/loans']=()=>ashell('loans','Loan Requests',`<div class="panel"><div class="tblwrap"><table class="tbl"><tr><th>ID</th><th>Customer</th><th>Amount</th><th>Term</th><th>Monthly</th><th>Purpose</th><th>Status</th><th>Action</th></tr>${loans.length?loans.slice().reverse().map(l=>`<tr><td>${l.id}</td><td>${esc(l.u)}<br><span class="sub">${esc(l.e)}</span></td><td><b>${fmt(l.amt,l.cur)}</b></td><td>${l.months} mo</td><td>${fmt(l.monthly,l.cur)}</td><td>${esc(l.purpose)}</td><td>${pill(l.s)}</td><td>${l.s==='Pending'?`<button class="mini" onclick="loanSet('${l.id}','Approved')">Approve</button><button class="mini" onclick="loanSet('${l.id}','Rejected')">Reject</button>`:'—'}</td></tr>`).join(''):'<tr><td colspan="8" class="sub">No loan requests yet.</td></tr>'}</table></div></div>`);
@@ -461,8 +505,10 @@ R['admin/settings']=()=>ashell('settings','Admin Settings',`<div class="panel">$
 /* ============ ACTIONS ============ */
 function doLogin(e){e.preventDefault();const id=$('#lg_e').value.trim().toLowerCase(),pw=$('#lg_p').value;
  if(id===DEMO.admin.username&&pw===DEMO.admin.password){sess={role:'admin'};save('mb_sess',sess);go('#/admin/dashboard');return false}
- let u=null;if(id===DEMO.customer.email&&pw===DEMO.customer.password)u={name:DEMO.customer.name,email:DEMO.customer.email,currency:'USD'};
- else{const r=reg.find(x=>(x.email.toLowerCase()===id||x.phone===id)&&x.pw===pw);if(r)u={name:r.name,email:r.email,currency:r.currency||'USD'}}
+ let u=null;const r=reg.find(x=>x.email.toLowerCase()===id||(x.phone&&x.phone===id));
+ if(r){if(r.pw&&r.pw===pw)u={name:r.name,email:r.email,currency:r.currency||'USD'}}
+ else if(id===DEMO.customer.email&&pw===DEMO.customer.password)u={name:DEMO.customer.name,email:DEMO.customer.email,currency:'USD'};
+ if(u){const us=users.find(x=>x.e.toLowerCase()===u.email.toLowerCase());if(us&&us.s==='Suspended'){$('#lg_err').textContent='This account is suspended. Please contact customer care.';return false}}
  if(!u){$('#lg_err').textContent='Incorrect email/phone or password.';return false}
  sess={role:'user',...u};save('mb_sess',sess);go('#/home');return false}
 
@@ -584,11 +630,66 @@ function replyCare(id){const c=care.find(x=>x.id===id);if(!c)return;const r=prom
 function sendNote(e){e.preventDefault();const to=$('#nt_to').value,t=$('#nt_t').value.trim(),b=$('#nt_m').value.trim();if(!t||!b)return false;
  pushNote(to,t,b,'Admin');persist();toast('Notification sent');render();return false}
 
-function addUser(){const n=prompt('Full name');if(!n)return;const e=prompt('Email');if(!e)return;users.push({n,e,s:'Active'});persist();render()}
+function addUser(){const n=(prompt('Full name')||'').trim();if(!n)return;const e=(prompt('Email')||'').trim();if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e)){toast('Enter a valid email');return}if(users.some(x=>x.e.toLowerCase()===e.toLowerCase())){toast('That email already exists');return}users.push({n,e,s:'Active'});persist();openUser(e)}
 function toggleUser(i){users[i].s=users[i].s==='Active'?'Suspended':'Active';persist();render()}
 function setKyc(i,s){const k=kyc[i];k.s=s;
  if(k.e)pushNote(k.e,s==='Verified'?'Identity verified':'Identity verification not approved',s==='Verified'?'Your identity documents have been approved. Withdrawals and loans are now available.':'We could not approve your identity documents. Please contact customer care.');
  persist();render()}
+
+/* ---- admin: user actions ---- */
+function renameEmail(o,n){
+ saveWalletOf(o,walletOf(o));
+ reg.forEach(x=>{if(x.email===o)x.email=n});users.forEach(x=>{if(x.e===o)x.e=n});kyc.forEach(x=>{if(x.e===o)x.e=n});
+ notes.forEach(x=>{if(x.to===o)x.to=n});wds.forEach(x=>{if(x.e===o)x.e=n});loans.forEach(x=>{if(x.e===o)x.e=n});care.forEach(x=>{if(x.e===o)x.e=n});
+ ['mb_wallet:','mb_cards:','mb_read:'].forEach(p=>{const v=localStorage.getItem(p+o);if(v!==null){localStorage.setItem(p+n,v);localStorage.removeItem(p+o)}});
+ ui.uemail=n}
+function saveUser(ev,old){ev.preventDefault();
+ const v=id=>$('#'+id).value.trim();
+ const err=m=>{const x=$('#uf_err');x.textContent=m;x.scrollIntoView({block:'center',behavior:'smooth'});return false};
+ const name=v('uf_n'),email=v('uf_e'),phone=v('uf_p');
+ if(!name)return err('Name is required.');
+ if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email))return err('Enter a valid email address.');
+ if(email.toLowerCase()!==old.toLowerCase()&&(users.some(x=>x.e.toLowerCase()===email.toLowerCase())||email.toLowerCase()===DEMO.customer.email))return err('Another account already uses that email.');
+ if(phone&&(!PHONE.test(phone)||phone.replace(/\D/g,'').length<7))return err('Enter a valid phone number.');
+ if(phone&&reg.some(r=>r.email!==old&&r.phone===phone))return err('Another account already uses that phone number.');
+ const bal=Math.round(parseFloat($('#uf_bal').value)*100)/100;if(isNaN(bal)||bal<0)return err('Enter a valid balance (0 or more).');
+ const pin=v('uf_pin');if(pin&&!/^\d{4}$/.test(pin))return err('PIN must be exactly 4 digits.');
+ const pw=$('#uf_pw').value;if(pw&&pw.length<8)return err('Password must be at least 8 characters.');
+ const status=$('#uf_st').value,ksNew=$('#uf_ks').value;
+ const oldK=kycRec(old),ksOld=oldK?oldK.s:'Verified';
+ if(email!==old)renameEmail(old,email);
+ let r=reg.find(x=>x.email===email);if(!r){r=stub(email);reg.push(r)}
+ Object.assign(r,{name,phone,pw,pin,dob:v('uf_dob'),gender:$('#uf_g').value,taxLast4:v('uf_ssn'),occupation:v('uf_occ'),country:v('uf_c'),city:v('uf_ci'),zip:v('uf_z'),address:v('uf_a'),currency:$('#uf_cur').value,docType:$('#uf_dt').value,photoName:v('uf_pf'),docName:v('uf_df')});
+ r.nok={name:v('uf_kn'),email:v('uf_ke'),phone:v('uf_kp'),relationship:v('uf_kr'),address:v('uf_ka')};
+ const us=users.find(x=>x.e===email);us.n=name;us.s=status;
+ [kyc,wds,loans,care].forEach(l=>l.forEach(x=>{if(x.e===email)x.u=name}));
+ let k=kycRec(email);
+ if(k){k.e=email;k.u=name;k.s=ksNew;if($('#uf_dt').value)k.t=$('#uf_dt').value}
+ else if(ksNew!=='Verified')kyc.unshift({id:uid('KYC'),e:email,u:name,t:$('#uf_dt').value||'ID',s:ksNew});
+ if(ksNew!==ksOld)pushNote(email,ksNew==='Verified'?'Identity verified':ksNew==='Rejected'?'Identity verification not approved':'Identity verification pending',ksNew==='Verified'?'Your identity documents have been approved. Withdrawals and loans are now available.':ksNew==='Rejected'?'We could not approve your identity documents. Please contact customer care.':'Your identity verification is being reviewed.');
+ const w=walletOf(email);
+ if(Math.abs(bal-w.balance)>=0.005){const d=Math.round((bal-w.balance)*100)/100;w.balance=bal;w.tx.unshift({n:'Balance adjustment by admin',d:today(),a:d,i:'swap'});
+  if($('#uf_bn').checked)pushNote(email,'Account balance updated','Your account balance was updated by MyBank to '+fmt(bal,r.currency)+'.')}
+ saveWalletOf(email,w);persist();toast('Changes saved');render();return false}
+function deleteUser(e){const u=users.find(x=>x.e===e);if(!u)return;
+ if(!confirm('Delete '+u.n+' permanently? This removes their profile, balance, history and messages.'))return;
+ reg=reg.filter(x=>x.email!==e);users=users.filter(x=>x.e!==e);kyc=kyc.filter(x=>x.e!==e);notes=notes.filter(x=>x.to!==e);wds=wds.filter(x=>x.e!==e);loans=loans.filter(x=>x.e!==e);care=care.filter(x=>x.e!==e);
+ ['mb_wallet:','mb_cards:','mb_read:'].forEach(p=>localStorage.removeItem(p+e));
+ persist();toast('User deleted');go('#/admin/users')}
+function saveTx(i){const e=ui.uemail,w=walletOf(e),t=w.tx[i];if(!t)return;const a=parseFloat($('#tx_a'+i).value);if(isNaN(a)){toast('Enter a valid amount');return}
+ t.n=$('#tx_n'+i).value.trim()||t.n;t.d=$('#tx_d'+i).value.trim()||t.d;t.a=a;const s=$('#tx_s'+i).value;if(s==='Completed')delete t.s;else t.s=s;
+ saveWalletOf(e,w);toast('Transaction updated');render()}
+function delTx(i){if(!confirm('Delete this transaction record? The balance will not change.'))return;const e=ui.uemail,w=walletOf(e);w.tx.splice(i,1);saveWalletOf(e,w);toast('Transaction deleted');render()}
+function addTx(){const e=ui.uemail,w=walletOf(e),n=$('#ntx_n').value.trim(),a=Math.round(parseFloat($('#ntx_a').value)*100)/100;
+ if(!n||isNaN(a)||a===0){toast('Enter a description and a non-zero amount');return}
+ if($('#ntx_b').checked){if(w.balance+a<0){toast('That would make the balance negative');return}w.balance=Math.round((w.balance+a)*100)/100}
+ w.tx.unshift({n,d:today(),a,i:a>0?'deposit':'withdraw'});saveWalletOf(e,w);toast('Entry added');render()}
+function saveCardA(i){const k='mb_cards:'+ui.uemail,cs=load(k,[]),c=cs[i];if(!c)return;const x=$('#cd_x'+i).value.trim();
+ if(!/^(0[1-9]|1[0-2])\/\d\d$/.test(x)){toast('Expiry must be MM/YY');return}
+ c.holder=$('#cd_h'+i).value.trim()||c.holder;c.exp=x;save(k,cs);toast('Card updated');render()}
+function delCardA(i){if(!confirm('Remove this card?'))return;const k='mb_cards:'+ui.uemail,cs=load(k,[]);cs.splice(i,1);save(k,cs);toast('Card removed');render()}
+function delNote(id){notes=notes.filter(n=>n.id!==id);persist();render()}
+function sendUserNote(ev,e){ev.preventDefault();const t=$('#un_t').value.trim(),b=$('#un_m').value.trim();if(!t||!b)return false;pushNote(e,t,b,'Admin');persist();toast('Notification sent');render();return false}
 
 /* ============ ROUTER ============ */
 function render(keepFocus){
@@ -599,7 +700,10 @@ function render(keepFocus){
  if(isAdmin&&!(sess&&sess.role==='admin')){go('#/login');return}
  if(!isAdmin&&!pub&&!(sess&&sess.role==='user')){go('#/login');return}
  if(pub&&r==='login'&&sess){go(sess.role==='admin'?'#/admin/dashboard':'#/home');return}
- if(sess&&sess.role==='user')wallet=walletOf(sess.email);
+ if(sess&&sess.role==='user'){const us=users.find(x=>x.e===sess.email);
+  if(!us||us.s==='Suspended'){logout();toast(us?'Your account is suspended. Contact customer care.':'Account not found.');return}
+  const rr=reg.find(x=>x.email===sess.email);if(rr&&(sess.name!==rr.name||sess.currency!==(rr.currency||'USD'))){sess.name=rr.name;sess.currency=rr.currency||'USD';save('mb_sess',sess)}
+  wallet=walletOf(sess.email)}
  app.innerHTML=R[r]();
  if(keepFocus){const q=$('#usr_q');if(q){q.focus();q.setSelectionRange(q.value.length,q.value.length)}}
 }
