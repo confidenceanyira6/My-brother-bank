@@ -4,89 +4,138 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MyBank App</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--blue:#0b4fe0;--blue2:#0a3fb8;--navy:#06185a;--green:#0f8a4b;--green2:#0b6e3b;--bg:#f4f6fb;--line:#e3e8f2;--txt:#101828;--mut:#667085;--red:#e5484d;--amber:#f5a524}
+:root{--blue:#0b4fe0;--blue2:#0a3fb8;--navy:#0a1f4f;--green:#0f8a4b;--green2:#0b6e3b;--bg:#f5f7fb;--line:#e4e9f2;--txt:#101828;--mut:#667085;--red:#d92d20;--amber:#b54708}
 *{box-sizing:border-box;margin:0;padding:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
-body{background:linear-gradient(160deg,#061a5c,#0a2a8f 60%,#041246);min-height:100vh;color:var(--txt)}
+body{background:linear-gradient(160deg,#061a5c,#0a2a8f 60%,#041246);min-height:100vh;color:var(--txt);-webkit-font-smoothing:antialiased}
 button{cursor:pointer;border:0;font-size:15px}
-input,select{font-size:15px;outline:0}
+input,select,textarea{font-size:15px;outline:0}
 .hidden{display:none!important}
+.vh{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}
+.i{flex:none;display:block}
 /* USER PHONE */
 .stage{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px}
-.phone{width:100%;max-width:400px;height:min(820px,100vh - 32px);background:#fff;border-radius:34px;overflow:hidden;position:relative;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.45)}
-@media(max-width:480px){.stage{padding:0}.phone{max-width:none;height:100vh;border-radius:0}}
-.status{display:flex;justify-content:space-between;padding:12px 22px 4px;font-size:12px;font-weight:700}
-.screen{flex:1;overflow:auto;padding:14px 20px 20px;display:flex;flex-direction:column}
+.phone{width:100%;max-width:400px;height:min(840px,100vh - 32px);background:#fff;border-radius:30px;overflow:hidden;position:relative;display:flex;flex-direction:column;box-shadow:0 24px 70px rgba(0,0,0,.45)}
+@media(max-width:480px){.stage{padding:0}.phone{max-width:none;height:100vh;border-radius:0}.status{display:none}}
+.status{display:flex;justify-content:space-between;padding:12px 22px 4px;font-size:12px;font-weight:600;color:var(--navy)}
+.screen{flex:1;overflow:auto;padding:14px 20px 22px;display:flex;flex-direction:column}
 .dark{background:linear-gradient(170deg,#0a3fb8,#06185a);color:#fff}
-.logo{width:76px;height:76px;border-radius:18px;background:var(--blue);display:grid;place-items:center;margin:0 auto}
-.logo svg{width:44px;height:44px;fill:#fff}
+.logo{width:72px;height:72px;border-radius:20px;background:var(--blue);display:grid;place-items:center;margin:0 auto}
+.logo svg{width:40px;height:40px;fill:#fff}
 .center{text-align:center}
-h1{font-size:26px}h2{font-size:20px}
-.sub{color:var(--mut);font-size:13px}
-.btn{width:100%;padding:14px;border-radius:10px;background:var(--blue);color:#fff;font-weight:700}
+h1{font-size:26px;font-weight:700;letter-spacing:-.3px}h2{font-size:19px;font-weight:700;letter-spacing:-.2px}
+.sub{color:var(--mut);font-size:13px;line-height:1.45}
+.btn{width:100%;padding:14px;border-radius:12px;background:var(--blue);color:#fff;font-weight:600;transition:.15s}
+.btn:hover{background:var(--blue2)}
 .btn.white{background:#fff;color:var(--blue)}
 .btn.green{background:var(--green)}
 .btn.sm{width:auto;padding:9px 14px;font-size:13px}
 .btn.out{background:#eaf0ff;color:var(--blue)}
-.field{width:100%;padding:14px;border:1px solid var(--line);border-radius:10px;margin-bottom:12px;background:#fff;color:var(--txt)}
-.field:focus{border-color:var(--blue)}
-label.l{display:block;font-size:13px;font-weight:600;margin:6px 0}
-.link{color:var(--blue);font-weight:700;cursor:pointer;background:none}
-.top{display:flex;align-items:center;gap:12px;margin-bottom:16px}
-.back{background:none;font-size:22px;color:var(--txt)}
-.feat{display:flex;align-items:center;gap:12px;margin:12px 0;font-size:14px;font-weight:600}
-.ico{width:32px;height:32px;border-radius:50%;background:#e6eeff;color:var(--blue);display:grid;place-items:center;font-size:15px;flex:none}
-.bal{background:linear-gradient(135deg,#0b4fe0,#0a3fb8);color:#fff;border-radius:14px;padding:16px;margin:14px 0}
-.bal b{font-size:30px;display:block;margin-top:4px}
-.quick{display:flex;justify-content:space-between;margin:6px 0 16px}
-.quick div{text-align:center;font-size:12px;cursor:pointer}
-.quick .c{width:48px;height:48px;border-radius:50%;background:var(--blue);color:#fff;display:grid;place-items:center;margin:0 auto 6px;font-size:20px}
+.field{width:100%;padding:13px 14px;border:1px solid var(--line);border-radius:12px;margin-bottom:12px;background:#fff;color:var(--txt);font-family:inherit}
+.field:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(11,79,224,.1)}
+select.field{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%23667085' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m1 1.5 5 5 5-5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px}
+select.field:disabled{background-color:#f5f7fb;color:var(--mut)}
+textarea.field{resize:vertical;min-height:90px}
+label.l{display:block;font-size:12.5px;font-weight:600;margin:4px 0 6px;color:#344054}
+.hint{font-size:11.5px;color:var(--mut);margin:-6px 0 12px;line-height:1.4}
+.link{color:var(--blue);font-weight:600;cursor:pointer;background:none}
+.top{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.back{background:#f1f4f9;width:36px;height:36px;border-radius:11px;display:grid;place-items:center;color:var(--navy);flex:none}
+.feat{display:flex;align-items:center;gap:12px;margin:14px 0;font-size:14px;font-weight:500}
+.ico{width:34px;height:34px;border-radius:10px;background:#e8efff;color:var(--blue);display:grid;place-items:center;font-size:13px;font-weight:600;flex:none}
+.hd{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.hd .grow{flex:1}.hd small{display:block;color:var(--mut);font-size:12px}.hd b{font-size:16px;font-weight:600}
+.av{width:42px;height:42px;border-radius:14px;background:var(--navy);color:#fff;display:grid;place-items:center;font-weight:600;font-size:14px}
+.ib{position:relative;width:40px;height:40px;border-radius:12px;background:#f1f4f9;display:grid;place-items:center;color:var(--navy)}
+.badge{position:absolute;top:-4px;right:-4px;min-width:17px;height:17px;padding:0 4px;border-radius:99px;background:var(--red);color:#fff;font-size:10px;font-weight:700;display:grid;place-items:center;border:2px solid #fff}
+.note{display:flex;gap:10px;align-items:flex-start;background:#fff7e6;border:1px solid #fde1a8;color:var(--amber);border-radius:12px;padding:11px 12px;font-size:12.5px;line-height:1.45;margin-bottom:12px}
+.note.red{background:#fef3f2;border-color:#fecdca;color:var(--red)}
+.bal{background:linear-gradient(135deg,#0a3fb8 0%,#0a1f4f 100%);color:#fff;border-radius:18px;padding:18px 18px 16px;margin:2px 0 16px;position:relative;overflow:hidden}
+.bal:after{content:"";position:absolute;right:-40px;top:-40px;width:150px;height:150px;border-radius:50%;background:rgba(255,255,255,.07)}
+.bal .lab{font-size:12px;opacity:.8;display:block}
+.bal b{font-size:30px;display:block;margin:4px 0 8px;font-weight:700;letter-spacing:-.5px}
+.bal .acct{font-size:11px;opacity:.75;background:rgba(255,255,255,.14);padding:3px 9px;border-radius:99px}
+.qa{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px}
+.qa button{position:relative;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 4px 10px;display:flex;flex-direction:column;align-items:center;gap:7px;font-size:11.5px;font-weight:500;color:var(--txt);transition:.15s}
+.qa button:hover{border-color:#c5d3f5;box-shadow:0 4px 12px rgba(11,79,224,.08)}
+.qa .c{width:38px;height:38px;border-radius:12px;background:#e8efff;color:var(--blue);display:grid;place-items:center}
+.qa .c.n{background:#f1f4f9;color:#475467}
+.qa .badge{top:4px;right:8px}
+.sech2{display:flex;justify-content:space-between;align-items:center;margin-bottom:2px}
+.sech2 b{font-size:14px;font-weight:600}
 .row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
-.row .grow{flex:1}.row small{color:var(--mut);display:block;font-size:12px}
-.pos{color:#0a9d58;font-weight:700}.neg{color:var(--red);font-weight:700}
-.cardlist{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:12px;display:flex;gap:12px;align-items:center;cursor:pointer}
+.row .grow{flex:1;min-width:0}.row small{color:var(--mut);display:block;font-size:12px}.row b{font-weight:600;font-size:14px}
+.pos{color:#067647;font-weight:600}.neg{color:#b42318;font-weight:600}
+.cardlist{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px;display:flex;gap:12px;align-items:center;cursor:pointer}
 .cardlist small{color:var(--mut);display:block}
 .nav{display:flex;justify-content:space-around;border-top:1px solid var(--line);padding:8px 0 12px;background:#fff}
-.nav button{background:none;font-size:11px;color:var(--mut);display:flex;flex-direction:column;align-items:center;gap:2px}
-.nav button span{font-size:19px}.nav button.on{color:var(--blue);font-weight:700}
-.billicons{display:flex;justify-content:space-between;margin-bottom:12px}
+.nav button{background:none;font-size:11px;color:var(--mut);display:flex;flex-direction:column;align-items:center;gap:3px;font-weight:500}
+.nav button.on{color:var(--blue);font-weight:600}
+.billicons{display:flex;gap:18px;margin-bottom:14px}
 .billicons div{text-align:center;font-size:11px;color:var(--mut)}
-.billicons span{display:grid;place-items:center;width:44px;height:44px;border-radius:12px;background:#f1f4fb;font-size:20px;margin-bottom:4px}
-.amt{font-size:22px;color:var(--blue)}
+.billicons span{display:grid;place-items:center;width:46px;height:46px;border-radius:14px;background:#f1f4fb;color:var(--blue);margin:0 auto 5px}
+.amt{font-size:20px;color:var(--blue);font-weight:600}
 .vcard{background:linear-gradient(135deg,#0b4fe0,#06185a);color:#fff;border-radius:16px;padding:18px;margin:6px 0 14px}
-.vcard .chip{width:40px;height:30px;background:#f5c542;border-radius:6px;margin:14px 0}
+.vcard .chip{width:40px;height:30px;background:#e8c25a;border-radius:6px;margin:14px 0}
 .vcard .num{letter-spacing:3px;font-size:18px;margin:6px 0}
 .tabs{display:flex;border-bottom:1px solid var(--line);margin-bottom:14px}
 .tabs button{flex:1;padding:10px;background:none;color:var(--mut);font-weight:600;border-bottom:3px solid transparent}
 .tabs button.on{color:var(--blue);border-color:var(--blue)}
-.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:#101828;color:#fff;padding:12px 18px;border-radius:10px;font-size:14px;z-index:99;max-width:90vw}
+.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:#101828;color:#fff;padding:12px 18px;border-radius:12px;font-size:14px;z-index:99;max-width:90vw}
 .err{color:var(--red);font-size:13px;margin:-4px 0 10px}
+.err:empty{display:none}
+.sec{border:1px solid var(--line);border-radius:16px;padding:14px 14px 4px;margin-bottom:14px;background:#fff}
+.sech{display:flex;align-items:center;gap:8px;font-weight:600;font-size:14px;color:var(--navy);margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+.two{display:flex;gap:10px}.two>div{flex:1;min-width:0}
+.file{display:flex;align-items:center;gap:10px;padding:12px 14px;border:1.5px dashed #b9c6e6;border-radius:12px;background:#f8faff;color:var(--blue);font-size:13.5px;font-weight:500;cursor:pointer;margin-bottom:8px}
+.file span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--txt)}
+.est{background:#f5f8ff;border:1px solid #d9e4fb;border-radius:12px;padding:12px 14px;margin-bottom:12px;font-size:13px}
+.est:empty{display:none}
+.est div{display:flex;justify-content:space-between;padding:3px 0}
+.est small{display:block;color:var(--mut);font-size:11.5px;margin-top:6px}
+.nt{border:1px solid var(--line);border-radius:14px;padding:13px 14px;margin-bottom:10px;background:#fff}
+.nt.new{border-color:#bcd0fa;background:#f5f8ff}
+.nt .ntt{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.nt b{font-size:14px;font-weight:600}.nt small{color:var(--mut);font-size:11.5px;white-space:nowrap}
+.nt p{font-size:13px;color:#475467;margin-top:5px;line-height:1.5;white-space:pre-wrap;word-break:break-word}
+.reply{background:#eef3ff;border-radius:10px;padding:9px 11px;margin-top:8px;font-size:12.5px;color:#1d2939;white-space:pre-wrap}
+.empty{text-align:center;color:var(--mut);font-size:13px;padding:34px 10px}
+.mrow{display:flex;align-items:center;gap:12px;padding:14px 4px;border-bottom:1px solid var(--line);cursor:pointer;text-align:left;background:none;width:100%;color:var(--txt);font-weight:500;font-size:14px}
+.mrow .grow{flex:1}
+.mini2{font-size:12px;color:var(--mut);margin:14px 0 8px;font-weight:600;text-transform:uppercase;letter-spacing:.4px}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:14px}
 /* ADMIN */
 .adm{min-height:100vh;display:flex;background:#eef2f7}
-.side{width:230px;background:linear-gradient(180deg,#0f8a4b,#075f33);color:#fff;padding:18px 12px;flex:none;display:flex;flex-direction:column;gap:4px}
+.side{width:236px;background:linear-gradient(180deg,#0f8a4b,#075f33);color:#fff;padding:18px 12px;flex:none;display:flex;flex-direction:column;gap:3px;overflow:auto}
 .side h3{display:flex;align-items:center;gap:8px;padding:6px 10px 16px;font-size:16px}
-.side button{background:none;color:#e6fff1;text-align:left;padding:11px 12px;border-radius:8px;display:flex;gap:10px;font-size:14px}
+.side button{background:none;color:#e6fff1;text-align:left;padding:10px 12px;border-radius:9px;display:flex;align-items:center;gap:10px;font-size:14px}
 .side button.on,.side button:hover{background:rgba(255,255,255,.18);color:#fff}
+.side .cnt{margin-left:auto;background:#fff;color:var(--green2);font-size:11px;font-weight:700;border-radius:99px;padding:1px 7px}
 .main{flex:1;min-width:0;padding:22px}
 .mtop{display:flex;align-items:center;gap:12px;margin-bottom:18px}
 .burger{display:none;background:var(--green);color:#fff;border-radius:8px;padding:8px 12px;font-size:18px}
 .panel{background:#fff;border-radius:14px;padding:18px;box-shadow:0 2px 10px rgba(16,24,40,.06);margin-bottom:18px}
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:18px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px;margin-bottom:18px}
 .stat{background:#fff;border-radius:14px;padding:18px;display:flex;gap:14px;align-items:center;box-shadow:0 2px 10px rgba(16,24,40,.06)}
-.stat .ico{background:#e3f6ec;color:var(--green);width:44px;height:44px}
+.stat .ico{background:#e3f6ec;color:var(--green);width:44px;height:44px;border-radius:12px}
 .stat b{font-size:24px;display:block}
 .tbl{width:100%;border-collapse:collapse;font-size:13px}
-.tbl th{background:#eef3fb;text-align:left;padding:10px;color:var(--blue2);font-size:12px}
-.tbl td{padding:10px;border-bottom:1px solid var(--line)}
+.tbl th{background:#eef3fb;text-align:left;padding:10px;color:var(--blue2);font-size:12px;white-space:nowrap}
+.tbl td{padding:10px;border-bottom:1px solid var(--line);vertical-align:top}
 .tblwrap{overflow-x:auto}
-.pill{padding:3px 10px;border-radius:99px;font-size:11px;font-weight:700;display:inline-block}
+.pill{padding:3px 10px;border-radius:99px;font-size:11px;font-weight:600;display:inline-block}
 .p-ok{background:#d7f5e4;color:#0a7a41}.p-wait{background:#fff0cf;color:#a86800}.p-bad{background:#fde1e1;color:#b42318}
 .sbar{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap}
 .sbar input,.sbar select{flex:1;min-width:140px;padding:10px 12px;border:1px solid var(--line);border-radius:8px}
-.gbtn{background:var(--green);color:#fff;padding:10px 14px;border-radius:8px;font-weight:700;font-size:13px}
-.mini{background:#eef3fb;color:var(--blue);padding:5px 9px;border-radius:6px;font-size:12px;margin-right:4px}
+.gbtn{background:var(--green);color:#fff;padding:10px 14px;border-radius:8px;font-weight:600;font-size:13px}
+.mini{background:#eef3fb;color:var(--blue);padding:5px 9px;border-radius:6px;font-size:12px;margin-right:4px;font-weight:500}
 .setrow{display:flex;align-items:center;gap:14px;padding:16px 8px;border-bottom:1px solid var(--line);cursor:pointer}
 .setrow:last-child{border:0}.setrow .grow{flex:1}
+.det{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px 18px;font-size:13px}
+.det small{display:block;color:var(--mut);font-size:11.5px}
 .alogin{min-height:100vh;display:grid;place-items:center;padding:16px}
 .abox{background:#fff;border-radius:18px;padding:30px;width:100%;max-width:380px;text-align:center;border:3px solid #19b36b}
 .abox .logo{background:var(--green)}
@@ -101,29 +150,85 @@ label.l{display:block;font-size:13px;font-weight:600;margin:6px 0}
 /* ============ TEMPORARY DEMO LOGINS (frontend only — will be replaced by real backend auth) ============ */
 const DEMO={
   admin:{username:'admin',password:'hujjujjuh'},
-  customer:{email:'confidenceanyira6@gmail.com',password:'hujjujjuh',name:'Confidence Anyira'}
+  customer:{email:'confidenceanyira6@gmail.com',password:'hujjujjuh',pin:'1234',name:'Confidence Anyira'}
 };
+/* Customer-care contact details. Fill these in and they appear on the Customer Care screen. */
+const CARE={email:'',phone:''};
+/* Loan settings (indicative figures shown to the customer; admin approves each request). */
+const LOAN={apr:12,terms:[3,6,12,18,24],purposes:['Business','Education','Rent','Medical','Personal','Other']};
 
+/* ============ ICONS ============ */
+const IC={
+ home:'<path d="M3 11.5 12 4l9 7.5"/><path d="M5 10v10h5v-6h4v6h5V10"/>',
+ card:'<rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="M2.5 10h19M6 15h4"/>',
+ swap:'<path d="M7 4 3 8l4 4M3 8h14M17 20l4-4-4-4M21 16H7"/>',
+ user:'<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5"/>',
+ send:'<path d="M6 18 18 6M9 6h9v9"/>',
+ deposit:'<path d="M12 4v12M7 11l5 5 5-5M5 20h14"/>',
+ withdraw:'<path d="M12 16V4M7 9l5-5 5 5M5 20h14"/>',
+ loan:'<path d="M19 5 5 19"/><circle cx="7" cy="7" r="2.5"/><circle cx="17" cy="17" r="2.5"/>',
+ bill:'<path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/>',
+ bell:'<path d="M6 16v-5a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 21h4"/>',
+ support:'<path d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect x="3" y="14" width="4" height="6" rx="1.5"/><rect x="17" y="14" width="4" height="6" rx="1.5"/><path d="M19 20c0 1.5-2 2-5 2"/>',
+ shield:'<path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/>',
+ lock:'<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',
+ upload:'<path d="M12 15V4M7 8l5-5 5 5"/><path d="M4 15v5h16v-5"/>',
+ users:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.5 3-5.5 6.5-5.5s6.5 2 6.5 5.5"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14.8c2 .6 3.5 2.2 3.5 5.2"/>',
+ id:'<rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M6 16c.5-1.5 1.5-2 3-2s2.5.5 3 2M15 10h3M15 14h3"/>',
+ gear:'<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9 7 7M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/>',
+ logout:'<path d="M9 4H5v16h4M16 8l4 4-4 4M20 12H9"/>',
+ chart:'<path d="M4 20V4M4 20h16M8 16v-4M12 16V8M16 16v-6"/>',
+ mail:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 7 8.5 6 8.5-6"/>',
+ phone:'<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/>',
+ back:'<path d="M15 5 8 12l7 7"/>',
+ chev:'<path d="m9 5 7 7-7 7"/>',
+ bank:'<path d="M3 9.5 12 4l9 5.5"/><path d="M5 10v8M9.5 10v8M14.5 10v8M19 10v8M3 21h18"/>',
+ bolt:'<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>',
+ wifi:'<path d="M2 9a15 15 0 0 1 20 0M5 12.5a10 10 0 0 1 14 0M8.5 16a5 5 0 0 1 7 0"/><circle cx="12" cy="19" r="1"/>',
+ tv:'<rect x="3" y="5" width="18" height="12" rx="2"/><path d="M8 21h8M12 17v4"/>'
+};
+const I=(n,s=20)=>`<svg class="i" width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${IC[n]||''}</svg>`;
 const BANK='<svg viewBox="0 0 24 24"><path d="M12 2 2 7v2h20V7L12 2zM4 11v7H2v2h20v-2h-2v-7h-2v7h-3v-7h-2v7h-2v-7H9v7H6v-7H4z"/></svg>';
+
+/* ============ HELPERS ============ */
 const $=s=>document.querySelector(s);
 const app=$('#app');
-const money=n=>'$'+Number(n).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
-function toast(m){const t=$('#toast');t.textContent=m;t.classList.remove('hidden');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.add('hidden'),2400)}
-function go(h){location.hash=h}
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const SYM={USD:'$',EUR:'€',GBP:'£',NGN:'₦',CAD:'CA$',AUD:'A$',GHS:'GH₵',KES:'KSh ',ZAR:'R ',INR:'₹',AED:'AED '};
+const CURRENCIES=[['USD','USD — US Dollar'],['EUR','EUR — Euro'],['GBP','GBP — British Pound'],['NGN','NGN — Nigerian Naira'],['CAD','CAD — Canadian Dollar'],['AUD','AUD — Australian Dollar'],['GHS','GHS — Ghanaian Cedi'],['KES','KES — Kenyan Shilling'],['ZAR','ZAR — South African Rand'],['INR','INR — Indian Rupee'],['AED','AED — UAE Dirham']];
+const fmt=(n,c)=>(SYM[c]||(c||'USD')+' ')+Number(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+const curCode=()=>(sess&&sess.currency)||'USD';
+const sym=()=>SYM[curCode()]||curCode()+' ';
+const money=n=>fmt(n,curCode());
+const today=()=>new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+const fdt=iso=>{const d=new Date(iso);return isNaN(d)?'':d.toLocaleString('en-US',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'})};
+const uid=p=>p+Date.now().toString(36).toUpperCase().slice(-5)+Math.floor(10+Math.random()*90);
+const first=n=>String(n||'').split(' ')[0];
+const initials=n=>String(n||'?').split(/\s+/).filter(Boolean).slice(0,2).map(x=>x[0].toUpperCase()).join('');
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.remove('hidden');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.add('hidden'),2600)}
+function go(h){if(location.hash===h)render();else location.hash=h}
 
 /* ============ STATE ============ */
 const load=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))||d}catch(e){return d}};
 const save=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
 let sess=load('mb_sess',null);
 let reg=load('mb_reg',[]);
-let wallet=load('mb_wallet',{balance:2500,tx:[
- {n:'Money Received',d:'Apr 24, 2025',a:500,i:'G'},
- {n:'Electricity Bill',d:'Apr 21, 2025',a:-50,i:'E'},
- {n:'Netflix',d:'Apr 19, 2025',a:-15,i:'N'}]});
+let notes=load('mb_notes',[]);
+let wds=load('mb_wd',[]);
+let loans=load('mb_loans',[]);
+let care=load('mb_care',[]);
+const demoWallet=()=>({balance:2500,tx:[
+ {n:'Money Received',d:'Apr 24, 2025',a:500,i:'deposit'},
+ {n:'Electricity Bill',d:'Apr 21, 2025',a:-50,i:'bolt'},
+ {n:'Netflix',d:'Apr 19, 2025',a:-15,i:'tv'}]});
+/* Each customer has their own wallet. New accounts start empty. */
+const walletOf=e=>load('mb_wallet:'+e,e===DEMO.customer.email?load('mb_wallet',demoWallet()):{balance:0,tx:[]});
+const saveWalletOf=(e,w)=>save('mb_wallet:'+e,w);
+let wallet=null;
 const bills=[
- {n:'Power Company',d:'Due Apr 25',a:50,i:'⚡'},
- {n:'Internet Provider',d:'Due Apr 20',a:20,i:'📶'},
- {n:'DSTV',d:'Due Apr 30',a:45,i:'📺'}];
+ {n:'Power Company',d:'Due Apr 25',a:50,i:'bolt'},
+ {n:'Internet Provider',d:'Due Apr 20',a:20,i:'wifi'},
+ {n:'DSTV',d:'Due Apr 30',a:45,i:'tv'}];
 let users=load('mb_users',[
  {n:'John Doe',e:'john@domain.com',s:'Active'},
  {n:'Jane Smith',e:'jane@domain.com',s:'Active'},
@@ -146,67 +251,266 @@ const banks=[
  ['John Doe','Zenith Bank','0123456789','Active'],['Jane Smith','GTBank','0987654321','Active'],
  ['Mike Johnson','Access Bank','1234567800','Active'],['Sarah Wilson','UBA','4567890123','Active'],
  ['David Brown','First Bank','7890123465','Active']];
-const persist=()=>{save('mb_wallet',wallet);save('mb_users',users);save('mb_kyc',kyc);save('mb_reg',reg)};
-let ui={card:0,ktab:'Pending',ttype:'All Types',ctab:'Cards',nav:false,q:''};
+const persist=()=>{
+ if(sess&&sess.role==='user'&&wallet)saveWalletOf(sess.email,wallet);
+ save('mb_users',users);save('mb_kyc',kyc);save('mb_reg',reg);save('mb_notes',notes);save('mb_wd',wds);save('mb_loans',loans);save('mb_care',care)};
+let ui={card:0,ktab:'Pending',ttype:'All Types',ctab:'Cards',nav:false,q:'',kview:'',fail:0,lock:0};
+
+function pushNote(to,title,body,from){notes.push({id:uid('N'),to,title,body,from:from||'MyBank',date:new Date().toISOString()})}
+function adjust(e,delta,tx){const w=walletOf(e);w.balance=Math.round((w.balance+delta)*100)/100;if(tx)w.tx.unshift(tx);saveWalletOf(e,w)}
+const myNotes=()=>notes.filter(n=>n.to==='all'||n.to===sess.email).sort((a,b)=>b.date.localeCompare(a.date));
+const readSet=()=>new Set(load('mb_read:'+sess.email,[]));
+const unread=()=>{const r=readSet();return myNotes().filter(n=>!r.has(n.id)).length};
+/* Demo customer counts as verified; everyone else follows the status on their KYC record. */
+const kycOf=()=>{const k=kyc.find(x=>x.e===sess.email);return k?k.s:'Verified'};
+const myPin=()=>sess.email===DEMO.customer.email?DEMO.customer.pin:(reg.find(r=>r.email===sess.email)||{}).pin;
+
+/* ============ COUNTRIES / CITIES ============ */
+const COUNTRIES={
+ 'Australia':['Sydney','Melbourne','Brisbane','Perth','Adelaide','Canberra'],
+ 'Benin':['Cotonou','Porto-Novo','Parakou','Abomey-Calavi'],
+ 'Cameroon':['Douala','Yaoundé','Bamenda','Garoua'],
+ 'Canada':['Toronto','Vancouver','Montreal','Calgary','Ottawa','Edmonton'],
+ 'Egypt':['Cairo','Alexandria','Giza','Luxor'],
+ 'France':['Paris','Marseille','Lyon','Toulouse','Nice'],
+ 'Germany':['Berlin','Munich','Hamburg','Frankfurt','Cologne'],
+ 'Ghana':['Accra','Kumasi','Tamale','Takoradi','Cape Coast'],
+ 'India':['Mumbai','Delhi','Bengaluru','Hyderabad','Chennai','Kolkata'],
+ 'Ireland':['Dublin','Cork','Galway','Limerick'],
+ 'Ivory Coast':['Abidjan','Yamoussoukro','Bouaké'],
+ 'Kenya':['Nairobi','Mombasa','Kisumu','Nakuru'],
+ 'Netherlands':['Amsterdam','Rotterdam','The Hague','Utrecht'],
+ 'Nigeria':['Lagos','Abuja','Port Harcourt','Kano','Ibadan','Enugu','Benin City','Owerri','Asaba','Warri','Kaduna','Uyo'],
+ 'Senegal':['Dakar','Thiès','Saint-Louis'],
+ 'South Africa':['Johannesburg','Cape Town','Durban','Pretoria','Port Elizabeth'],
+ 'Togo':['Lomé','Kara','Sokodé'],
+ 'United Arab Emirates':['Dubai','Abu Dhabi','Sharjah','Ajman'],
+ 'United Kingdom':['London','Manchester','Birmingham','Leeds','Glasgow','Liverpool'],
+ 'United States':['New York','Los Angeles','Chicago','Houston','Atlanta','Miami','Dallas','Washington']
+};
 
 /* ============ USER SCREENS ============ */
-const shell=(inner,cls='')=>`<div class="stage"><div class="phone"><div class="status"><span>9:41</span><span>▂▄▆ ▮</span></div>${inner}</div></div>`;
-const pnav=a=>`<div class="nav">${[['home','🏠','Home'],['cards','💳','Cards'],['transactions','🔁','Transaction'],['profile','👤','Profile']].map(x=>`<button class="${a===x[0]?'on':''}" onclick="go('#/${x[0]}')"><span>${x[1]}</span>${x[2]}</button>`).join('')}</div>`;
-const back=(t,to)=>`<div class="top"><button class="back" onclick="go('${to}')">←</button><h2>${t}</h2></div>`;
+const shell=(inner)=>`<div class="stage"><div class="phone"><div class="status"><span>9:41</span><span>MyBank</span></div>${inner}</div></div>`;
+const NAVS=[['home','home','Home'],['cards','card','Cards'],['transactions','swap','Transactions'],['profile','user','Profile']];
+const pnav=a=>`<div class="nav">${NAVS.map(x=>`<button class="${a===x[0]?'on':''}" onclick="go('#/${x[0]}')">${I(x[1],21)}${x[2]}</button>`).join('')}</div>`;
+const back=(t,to)=>`<div class="top"><button class="back" onclick="go('${to}')" aria-label="Back">${I('back',18)}</button><h2>${t}</h2></div>`;
+const pill=s=>`<span class="pill ${['Active','Completed','Verified','Approved','Answered'].includes(s)?'p-ok':['Pending','Open'].includes(s)?'p-wait':'p-bad'}">${esc(s)}</span>`;
+const txRow=t=>`<div class="row"><span class="ico">${IC[t.i]?I(t.i,17):esc(t.i)}</span><div class="grow"><b>${esc(t.n)}</b><small>${esc(t.d)}${t.s&&t.s!=='Completed'?' · '+esc(t.s):''}</small></div><span class="${t.a>0?'pos':'neg'}">${t.a>0?'+':'-'}${money(Math.abs(t.a))}</span></div>`;
+
+/* form helpers */
+const F=(id,label,attrs='',type='text')=>`<label class="l" for="${id}">${label}</label><input class="field" id="${id}" type="${type}" ${attrs}>`;
+const SEL=(id,label,opts,ph,extra='')=>`<label class="l" for="${id}">${label}</label><select class="field" id="${id}" required ${extra}><option value="">${ph}</option>${opts.map(o=>{const p=Array.isArray(o)?o:[o,o];return `<option value="${esc(p[0])}">${esc(p[1])}</option>`}).join('')}</select>`;
+const FILE=(id,label,accept,hint,pdf)=>`<label class="l">${label}</label><label class="file" for="${id}">${I('upload',18)}<span id="${id}_t">Choose file</span></label><input type="file" id="${id}" accept="${accept}" class="vh" ${pdf?'data-pdf="1"':''} onchange="fileChosen(this)"><div class="hint">${hint}</div>`;
+const maxDob=()=>{const d=new Date();d.setFullYear(d.getFullYear()-18);return d.toISOString().slice(0,10)};
 
 const R={};
-R['splash']=()=>shell(`<div class="screen dark center" style="justify-content:center;gap:10px"><div class="logo">${BANK}</div><h1>MyBank App</h1><div class="sub" style="color:#c9d6ff">Banking • Payments • More</div><div style="height:140px"></div><button class="btn white" onclick="go('#/welcome')">Get Started</button><div style="font-size:12px;margin-top:10px">Already have an account? <b style="cursor:pointer" onclick="go('#/login')">Log In</b></div></div>`);
-R['welcome']=()=>shell(`<div class="screen center"><div style="font-size:64px;margin-top:20px">🛡️</div><h1 style="margin:10px 0 4px">Welcome to<br>MyBank App</h1><div class="sub">Simple . Secure . Convenient.</div><div style="text-align:left;margin:22px 8px"><div class="feat"><span class="ico">💼</span>Manage your money</div><div class="feat"><span class="ico">🔁</span>Send and receive money</div><div class="feat"><span class="ico">🧾</span>Pay bills and more</div></div><div style="flex:1"></div><button class="btn" onclick="go('#/signup')">Get Started</button></div>`);
-R['signup']=()=>shell(`<div class="screen"><div class="center" style="margin:10px 0 20px"><h2>Create Account</h2><div class="sub">Join MyBank today</div></div>
-<form onsubmit="return doSignup(event)"><input class="field" id="su_n" placeholder="Full Name" required><input class="field" id="su_e" type="email" placeholder="Email Address" required><input class="field" id="su_p" placeholder="Phone Number" required><input class="field" id="su_pw" type="password" placeholder="Password" minlength="6" required><div id="su_err" class="err"></div><button class="btn">Sign Up</button></form>
-<div class="center sub" style="margin-top:14px">Already have an account? <span class="link" onclick="go('#/login')">Log In</span></div></div>`);
+R['splash']=()=>shell(`<div class="screen dark center" style="justify-content:center;gap:10px"><div class="logo" style="background:rgba(255,255,255,.14)">${BANK}</div><h1>MyBank App</h1><div class="sub" style="color:#c9d6ff">Banking • Payments • Loans</div><div style="height:140px"></div><button class="btn white" onclick="go('#/welcome')">Get Started</button><div style="font-size:12.5px;margin-top:12px">Already have an account? <b style="cursor:pointer" onclick="go('#/login')">Log In</b></div></div>`);
+R['welcome']=()=>shell(`<div class="screen center"><div style="color:var(--blue);margin:26px auto 4px">${I('shield',60)}</div><h1 style="margin:10px 0 4px">Welcome to<br>MyBank App</h1><div class="sub">Simple · Secure · Convenient</div><div style="text-align:left;margin:22px 8px"><div class="feat"><span class="ico">${I('bank',18)}</span>Manage your money</div><div class="feat"><span class="ico">${I('swap',18)}</span>Send money and withdraw</div><div class="feat"><span class="ico">${I('loan',18)}</span>Apply for loans</div><div class="feat"><span class="ico">${I('bill',18)}</span>Pay bills and more</div></div><div style="flex:1"></div><button class="btn" onclick="go('#/signup')">Get Started</button></div>`);
+
+R['signup']=()=>shell(`<div class="screen">
+<div class="center" style="margin:6px 0 16px"><h2>Complete Your Enrollment</h2><div class="sub">Open your MyBank account. All fields are required.</div></div>
+<form id="su_form" onsubmit="return doSignup(event)" autocomplete="off">
+<div class="sec"><div class="sech">${I('user',17)}Personal Information</div>
+${F('su_n','Name','required autocomplete="name" maxlength="80"')}
+${F('su_e','Email','required autocomplete="email" maxlength="120"','email')}
+${F('su_p','Phone','required autocomplete="tel" inputmode="tel" maxlength="20"','tel')}
+${F('su_dob','Date of Birth',`required min="1900-01-01" max="${maxDob()}"`,'date')}
+${SEL('su_g','Gender',['Male','Female','Other','Prefer not to say'],'Select')}
+${F('su_ssn','Social Security Number / Tax ID','required autocomplete="off" maxlength="20"','password')}
+<div class="hint">Only the last 4 characters are kept on this device.</div>
+${F('su_occ','Occupation','required maxlength="60"')}
+</div>
+<div class="sec"><div class="sech">${I('home',17)}Contact Information</div>
+${SEL('su_country','Country',Object.keys(COUNTRIES).concat('Other'),'Select Country','onchange="fillCities()"')}
+<label class="l" for="su_city">City</label><select class="field" id="su_city" required disabled onchange="cityPick()"><option value="">Select Country First</option></select>
+<input class="field hidden" id="su_city_o" placeholder="Type your city" maxlength="60">
+<div class="two"><div>${F('su_zip','ZIP','required maxlength="12" autocomplete="postal-code"')}</div><div></div></div>
+${F('su_addr','Address','required maxlength="160" autocomplete="street-address"')}
+</div>
+<div class="sec"><div class="sech">${I('users',17)}Next of Kin Information</div>
+${F('nk_n','Name','required maxlength="80"')}
+${F('nk_e','Email','required maxlength="120"','email')}
+${F('nk_p','Phone','required inputmode="tel" maxlength="20"','tel')}
+${F('nk_r','Relationship','required maxlength="40" placeholder="e.g: Brother"')}
+${F('nk_a','Address','required maxlength="160"')}
+</div>
+<div class="sec"><div class="sech">${I('lock',17)}Account Information</div>
+${SEL('su_cur','Account Currency',CURRENCIES,'Select')}
+${F('su_pw','Password','required minlength="8" autocomplete="new-password"','password')}
+${F('su_pw2','Repeat Password','required minlength="8" autocomplete="new-password"','password')}
+${F('su_pin','PIN','required inputmode="numeric" pattern="[0-9]{4}" maxlength="4" autocomplete="off"','password')}
+<div class="hint">Use at least 8 characters for your password. Your 4-digit PIN authorises withdrawals.</div>
+</div>
+<div class="sec"><div class="sech">${I('id',17)}KYC Verification</div>
+${FILE('su_photo','Passport Photograph','image/png,image/jpeg,image/gif','Accepted file types: PNG, JPG, GIF (max 5 MB)',false)}
+${SEL('su_doct','Means of Identification',['Passport ID','National ID','Bank Statement','Utility Bill'],'Select document')}
+${FILE('su_doc','Upload Document','application/pdf,image/png,image/jpeg,image/gif','Accepted documents: Passport ID, National ID, Bank Statement, Utility Bill. Accepted file types: PDF, PNG, JPG, GIF (max 5 MB)',true)}
+</div>
+<div id="su_err" class="err" role="alert"></div>
+<button class="btn">Create Account</button></form>
+<div class="center sub" style="margin:14px 0 4px">Already have an account? <span class="link" onclick="go('#/login')">Log In</span></div></div>`);
+
 R['login']=()=>shell(`<div class="screen"><div class="center" style="margin:30px 0 24px"><h2>Welcome Back</h2><div class="sub">Login to your account</div></div>
 <form onsubmit="return doLogin(event)"><input class="field" id="lg_e" placeholder="Email, Phone or Username" autocomplete="username" required><input class="field" id="lg_p" type="password" placeholder="Password" autocomplete="current-password" required><div style="text-align:right;margin:-4px 0 14px"><span class="link" style="font-size:12px" onclick="toast('Password reset will be available once the backend is connected')">Forgot Password?</span></div><div id="lg_err" class="err"></div><button class="btn">Log In</button></form>
 <div class="center sub" style="margin-top:14px">Don't have an account? <span class="link" onclick="go('#/signup')">Sign Up</span></div></div>`);
-R['home']=()=>shell(`<div class="screen"><div class="top" style="margin-bottom:6px"><span style="font-size:30px">🧑</span><div style="flex:1"><b>Good Morning, ${sess.name.split(' ')[0]}</b><div class="sub">Welcome back</div></div><span>🔍</span></div>
-<div class="bal"><div style="font-size:13px">Total Balance</div><b>${money(wallet.balance)}</b></div>
-<div class="quick">${[['Send','↗','#/send'],['Receive','↙','#/dsw'],['Deposit','⬇','#/dsw'],['More','🏦','#/dsw']].map(q=>`<div onclick="go('${q[2]}')"><div class="c">${q[1]}</div>${q[0]}</div>`).join('')}</div>
-<div style="display:flex;justify-content:space-between"><b>Recent Transactions</b><span class="link" style="font-size:13px" onclick="go('#/transactions')">See All</span></div>
-${wallet.tx.slice(0,4).map(txRow).join('')}<div style="flex:1"></div></div>${pnav('home')}`);
-const txRow=t=>`<div class="row"><span class="ico">${t.i}</span><div class="grow"><b>${t.n}</b><small>${t.d}</small></div><span class="${t.a>0?'pos':'neg'}">${t.a>0?'+':'-'}${money(Math.abs(t.a))}</span></div>`;
-R['dsw']=()=>shell(`<div class="screen">${back('Deposit / Send / Withdraw','#/home')}
-<div class="cardlist" onclick="amountAction('deposit')"><span class="ico">⬇</span><div><b>Deposit</b><small>Add money to your account</small></div></div>
-<div class="cardlist" onclick="go('#/send')"><span class="ico">↗</span><div><b>Send</b><small>Send money to others</small></div></div>
-<div class="cardlist" onclick="amountAction('withdraw')"><span class="ico">🏦</span><div><b>Withdraw</b><small>Withdraw to your bank or wallet</small></div></div></div>${pnav('home')}`);
-R['send']=()=>shell(`<div class="screen">${back('Send Money','#/dsw')}<form onsubmit="return doSend(event)"><label class="l">Recipient:</label><input class="field" id="sm_r" placeholder="Enter phone number or email" required><label class="l">Amount</label><input class="field amt" id="sm_a" type="number" step="0.01" min="0.01" placeholder="$ 0.00" required><label class="l">Note (Optional)</label><input class="field" id="sm_n" placeholder="Add a note"><div id="sm_err" class="err"></div><div style="height:30px"></div><button class="btn">Continue</button></form></div>`);
-R['bills']=()=>shell(`<div class="screen">${back('Pay Bills','#/home')}<div class="billicons"><div><span>💡</span>Electricity</div><div><span>💧</span>Internet</div><div><span>📶</span>Internet</div><div><span>📺</span>Cable & TV</div></div><b style="display:block;margin:8px 0">Recent Bills</b>
-${bills.map((b,i)=>`<div class="row" onclick="payBill(${i})" style="cursor:pointer"><span class="ico">${b.i}</span><div class="grow"><b>${b.n}</b><small>${b.d}</small></div><b>${money(b.a)}</b></div>`).join('')}</div>${pnav('home')}`);
-const vc=(c,i)=>`<div class="vcard" ${i>=0?`onclick="ui.card=${i};go('#/carddetail')" style="cursor:pointer"`:''}><b>${c.brand}</b><div class="chip"></div><div class="num">**** **** **** ${c.last4}</div><div style="display:flex;justify-content:space-between;font-size:12px"><span>${c.holder}</span><span>${c.exp}</span></div></div>`;
-R['cards']=()=>{const cs=getCards();return shell(`<div class="screen">${back('My Cards','#/home')}${cs.length?cs.map(vc).join(''):'<div class="center sub" style="margin:30px 0">No cards yet. Add your first card.</div>'}<button class="btn" onclick="go('#/addcard')">+ Add Card</button></div>${pnav('cards')}`)};
-R['addcard']=()=>shell(`<div class="screen">${back('Add Card','#/cards')}<form onsubmit="return doAddCard(event)"><label class="l">Card Holder Name</label><input class="field" id="cd_n" placeholder="Name on card" value="${sess.name}" required><label class="l">Card Number</label><input class="field" id="cd_c" inputmode="numeric" autocomplete="cc-number" placeholder="0000 0000 0000 0000" oninput="fmtNum(this)" required><div style="display:flex;gap:12px"><div style="flex:1"><label class="l">Expiry (MM/YY)</label><input class="field" id="cd_e" inputmode="numeric" autocomplete="cc-exp" placeholder="MM/YY" oninput="fmtExp(this)" required></div><div style="flex:1"><label class="l">CVV</label><input class="field" id="cd_v" type="password" inputmode="numeric" autocomplete="cc-csc" maxlength="4" placeholder="***" required></div></div><div class="sub" style="margin-bottom:10px">Only the last 4 digits are kept. Your full card number and CVV are never saved.</div><div id="cd_err" class="err"></div><button class="btn">Save Card</button></form></div>${pnav('cards')}`);
-R['carddetail']=()=>{const cs=getCards(),c=cs[ui.card];if(!c){go('#/cards');return ''}return shell(`<div class="screen">${back('Card Details','#/cards')}${vc(c,-1)}<div class="row"><div class="grow"><small>Card Holder</small><b>${c.holder}</b></div></div><div class="row"><div class="grow"><small>Card Type</small><b>${c.brand}</b></div></div><div class="row"><div class="grow"><small>Card Number</small><b>**** **** **** ${c.last4}</b></div></div><div class="row"><div class="grow"><small>Expiry Date</small><b>${c.exp}</b></div></div><div class="row"><div class="grow"><small>Added</small><b>${c.added}</b></div></div><div style="height:16px"></div><button class="btn out" onclick="removeCard()" style="color:var(--red)">Remove Card</button></div>${pnav('cards')}`)};
-R['transactions']=()=>shell(`<div class="screen">${back('Transactions','#/home')}${wallet.tx.map(txRow).join('')}</div>${pnav('transactions')}`);
-R['profile']=()=>shell(`<div class="screen center"><div style="font-size:64px;margin-top:20px">🧑</div><h2>${sess.name}</h2><div class="sub" style="margin-bottom:24px">${sess.email}</div><button class="btn out" onclick="go('#/bills')">Pay Bills</button><div style="height:12px"></div><button class="btn" onclick="logout()">Log Out</button></div>${pnav('profile')}`);
+
+const greet=()=>{const h=new Date().getHours();return h<12?'Good morning':h<17?'Good afternoon':'Good evening'};
+R['home']=()=>{
+ const ks=kycOf(),un=unread();
+ const QA=[
+  ['send','Send',"go('#/send')",0],['deposit','Deposit',"amountAction()",0],['withdraw','Withdraw',"go('#/withdraw')",0],['loan','Loan',"go('#/loan')",0],
+  ['bill','Bills',"go('#/bills')",1],['card','Cards',"go('#/cards')",1],['bell','Alerts',"go('#/notifications')",1,un],['support','Support',"go('#/care')",1]];
+ return shell(`<div class="screen">
+<div class="hd"><div class="av">${esc(initials(sess.name))}</div><div class="grow"><small>${greet()}</small><b>${esc(first(sess.name))}</b></div>
+<button class="ib" onclick="go('#/notifications')" aria-label="Notifications">${I('bell',19)}${un?`<span class="badge">${un>9?'9+':un}</span>`:''}</button>
+<button class="ib" onclick="go('#/care')" aria-label="Customer care">${I('support',19)}</button></div>
+${ks==='Pending'?`<div class="note">${I('shield',18)}<div>Identity verification is in progress. Withdrawals and loans unlock once your documents are approved.</div></div>`:ks==='Rejected'?`<div class="note red">${I('shield',18)}<div>Your identity documents were not approved. Please contact customer care.</div></div>`:''}
+<div class="bal"><span class="lab">Total Balance</span><b>${money(wallet.balance)}</b><span class="acct">${esc(curCode())} Account</span></div>
+<div class="qa">${QA.map(q=>`<button onclick="${q[2]}"><span class="c ${q[3]?'n':''}">${I(q[0],19)}</span>${q[1]}${q[4]?`<span class="badge">${q[4]>9?'9+':q[4]}</span>`:''}</button>`).join('')}</div>
+<div class="sech2"><b>Recent Transactions</b><span class="link" style="font-size:13px" onclick="go('#/transactions')">See All</span></div>
+${wallet.tx.length?wallet.tx.slice(0,4).map(txRow).join(''):'<div class="empty">No transactions yet.</div>'}<div style="flex:1"></div></div>${pnav('home')}`)};
+
+R['send']=()=>shell(`<div class="screen">${back('Send Money','#/home')}<form onsubmit="return doSend(event)"><label class="l">Recipient</label><input class="field" id="sm_r" placeholder="Enter phone number or email" required><label class="l">Amount</label><input class="field amt" id="sm_a" type="number" step="0.01" min="0.01" placeholder="${esc(sym())}0.00" required><label class="l">Note (Optional)</label><input class="field" id="sm_n" placeholder="Add a note" maxlength="80"><div id="sm_err" class="err"></div><div style="height:20px"></div><button class="btn">Continue</button></form></div>${pnav('home')}`);
+
+R['withdraw']=()=>{
+ const ks=kycOf(),mine=wds.filter(w=>w.e===sess.email);
+ const gate=ks==='Verified'?'':`<div class="note ${ks==='Rejected'?'red':''}">${I('shield',18)}<div>${ks==='Pending'?'Withdrawals unlock once your identity documents are verified.':'Your identity documents were not approved. Please contact customer care.'}</div></div>`;
+ return shell(`<div class="screen">${back('Withdraw','#/home')}
+<div class="card" style="display:flex;justify-content:space-between;align-items:center"><span class="sub">Available balance</span><b style="font-size:18px">${money(wallet.balance)}</b></div>
+${gate}
+<form onsubmit="return doWithdraw(event)" autocomplete="off" ${ks==='Verified'?'':'style="opacity:.55;pointer-events:none"'}>
+<label class="l">Amount</label><input class="field amt" id="wd_a" type="number" step="0.01" min="0.01" placeholder="${esc(sym())}0.00" required>
+<label class="l">Bank Name</label><input class="field" id="wd_b" placeholder="e.g. Zenith Bank" maxlength="60" required>
+<label class="l">Account Number / IBAN</label><input class="field" id="wd_n" maxlength="40" required>
+<label class="l">Account Holder Name</label><input class="field" id="wd_h" maxlength="80" required>
+<label class="l">SWIFT / Routing / Sort Code (Optional)</label><input class="field" id="wd_c" maxlength="20">
+<label class="l">Narration (Optional)</label><input class="field" id="wd_m" maxlength="80">
+<label class="l">Transaction PIN</label><input class="field" id="wd_p" type="password" inputmode="numeric" maxlength="4" pattern="[0-9]{4}" placeholder="4-digit PIN" autocomplete="off" required>
+<div class="hint">Withdrawals are reviewed by our team. You will be notified here once yours is processed.</div>
+<div id="wd_err" class="err" role="alert"></div><button class="btn">Withdraw</button></form>
+${mine.length?`<div class="mini2">Your withdrawal requests</div>${mine.slice().reverse().map(w=>`<div class="row"><span class="ico">${I('withdraw',17)}</span><div class="grow"><b>${fmt(w.amt,w.cur)}</b><small>${esc(w.bank)} · ${esc(w.date)}</small></div>${pill(w.s)}</div>`).join('')}`:''}
+</div>${pnav('home')}`)};
+
+const loanCalc=(a,n)=>{const r=LOAN.apr/1200;const m=r?a*r/(1-Math.pow(1+r,-n)):a/n;return{m,total:m*n}};
+R['loan']=()=>{
+ const ks=kycOf(),mine=loans.filter(l=>l.e===sess.email);
+ const gate=ks==='Verified'?'':`<div class="note ${ks==='Rejected'?'red':''}">${I('shield',18)}<div>${ks==='Pending'?'Loans unlock once your identity documents are verified.':'Your identity documents were not approved. Please contact customer care.'}</div></div>`;
+ return shell(`<div class="screen">${back('Loan','#/home')}
+<div class="card"><b style="font-size:14px">Apply for a loan</b><div class="sub" style="margin-top:4px">Tell us how much you need and for how long. Approved loans are credited to your balance.</div></div>
+${gate}
+<form onsubmit="return doLoan(event)" ${ks==='Verified'?'':'style="opacity:.55;pointer-events:none"'}>
+<label class="l">Loan Amount</label><input class="field amt" id="ln_a" type="number" step="0.01" min="1" placeholder="${esc(sym())}0.00" oninput="loanEst()" required>
+<label class="l">Repayment Period</label><select class="field" id="ln_t" onchange="loanEst()">${LOAN.terms.map(t=>`<option value="${t}">${t} months</option>`).join('')}</select>
+<label class="l">Purpose</label><select class="field" id="ln_p" required><option value="">Select purpose</option>${LOAN.purposes.map(p=>`<option>${p}</option>`).join('')}</select>
+<div class="est" id="ln_est"></div>
+<div id="ln_err" class="err" role="alert"></div><button class="btn">Submit Application</button></form>
+${mine.length?`<div class="mini2">Your loan requests</div>${mine.slice().reverse().map(l=>`<div class="row"><span class="ico">${I('loan',17)}</span><div class="grow"><b>${fmt(l.amt,l.cur)} · ${l.months} mo</b><small>${esc(l.purpose)} · ${esc(l.date)}</small></div>${pill(l.s)}</div>`).join('')}`:''}
+</div>${pnav('home')}`)};
+
+R['notifications']=()=>{
+ const list=myNotes(),r=readSet();
+ const body=list.length?list.map(n=>`<div class="nt ${r.has(n.id)?'':'new'}"><div class="ntt"><b>${esc(n.title)}</b><small>${fdt(n.date)}</small></div><p>${esc(n.body)}</p></div>`).join(''):`<div class="empty">${I('bell',34)}<div style="margin-top:8px">You have no notifications yet.</div></div>`;
+ save('mb_read:'+sess.email,list.map(n=>n.id));
+ return shell(`<div class="screen">${back('Notifications','#/home')}${body}</div>${pnav('home')}`)};
+
+R['care']=()=>{
+ const mine=care.filter(c=>c.e===sess.email).slice().reverse();
+ const contact=(CARE.email||CARE.phone)?`<div class="card">${CARE.email?`<div class="row" style="border:0;padding:6px 0"><span class="ico">${I('mail',17)}</span><div class="grow"><small>Email</small><b>${esc(CARE.email)}</b></div></div>`:''}${CARE.phone?`<div class="row" style="border:0;padding:6px 0"><span class="ico">${I('phone',17)}</span><div class="grow"><small>Phone</small><b>${esc(CARE.phone)}</b></div></div>`:''}</div>`:'';
+ return shell(`<div class="screen">${back('Customer Care','#/home')}${contact}
+<div class="card"><b style="font-size:14px">Send us a message</b><div class="sub" style="margin:4px 0 12px">Our team replies here. Check your notifications for updates.</div>
+<form onsubmit="return doCare(event)"><label class="l">Topic</label><select class="field" id="cc_s" required><option value="">Select topic</option>${['Account','Withdrawal','Loan','Card','Verification','Other'].map(t=>`<option>${t}</option>`).join('')}</select>
+<label class="l">Message</label><textarea class="field" id="cc_m" rows="4" maxlength="600" required placeholder="How can we help?"></textarea>
+<div id="cc_err" class="err"></div><button class="btn">Send Message</button></form></div>
+${mine.length?`<div class="mini2">Your conversations</div>${mine.map(c=>`<div class="nt"><div class="ntt"><b>${esc(c.subject)}</b>${pill(c.s)}</div><p>${esc(c.msg)}</p>${c.reply?`<div class="reply"><small style="display:block;color:var(--mut);margin-bottom:3px">MyBank Support</small>${esc(c.reply)}</div>`:''}</div>`).join('')}`:''}
+</div>${pnav('home')}`)};
+
+R['bills']=()=>shell(`<div class="screen">${back('Pay Bills','#/home')}<div class="billicons"><div><span>${I('bolt',22)}</span>Electricity</div><div><span>${I('wifi',22)}</span>Internet</div><div><span>${I('tv',22)}</span>Cable & TV</div></div><b style="display:block;margin:8px 0;font-size:14px">Recent Bills</b>
+${bills.map((b,i)=>`<div class="row" onclick="payBill(${i})" style="cursor:pointer"><span class="ico">${I(b.i,17)}</span><div class="grow"><b>${esc(b.n)}</b><small>${esc(b.d)}</small></div><b>${money(b.a)}</b></div>`).join('')}</div>${pnav('home')}`);
+const vc=(c,i)=>`<div class="vcard" ${i>=0?`onclick="ui.card=${i};go('#/carddetail')" style="cursor:pointer"`:''}><b>${esc(c.brand)}</b><div class="chip"></div><div class="num">**** **** **** ${esc(c.last4)}</div><div style="display:flex;justify-content:space-between;font-size:12px"><span>${esc(c.holder)}</span><span>${esc(c.exp)}</span></div></div>`;
+R['cards']=()=>{const cs=getCards();return shell(`<div class="screen">${back('My Cards','#/home')}${cs.length?cs.map(vc).join(''):'<div class="empty">No cards yet. Add your first card.</div>'}<button class="btn" onclick="go('#/addcard')">+ Add Card</button></div>${pnav('cards')}`)};
+R['addcard']=()=>shell(`<div class="screen">${back('Add Card','#/cards')}<form onsubmit="return doAddCard(event)"><label class="l">Card Holder Name</label><input class="field" id="cd_n" placeholder="Name on card" value="${esc(sess.name)}" required><label class="l">Card Number</label><input class="field" id="cd_c" inputmode="numeric" autocomplete="cc-number" placeholder="0000 0000 0000 0000" oninput="fmtNum(this)" required><div style="display:flex;gap:12px"><div style="flex:1"><label class="l">Expiry (MM/YY)</label><input class="field" id="cd_e" inputmode="numeric" autocomplete="cc-exp" placeholder="MM/YY" oninput="fmtExp(this)" required></div><div style="flex:1"><label class="l">CVV</label><input class="field" id="cd_v" type="password" inputmode="numeric" autocomplete="cc-csc" maxlength="4" placeholder="***" required></div></div><div class="hint">Only the last 4 digits are kept. Your full card number and CVV are never saved.</div><div id="cd_err" class="err"></div><button class="btn">Save Card</button></form></div>${pnav('cards')}`);
+R['carddetail']=()=>{const cs=getCards(),c=cs[ui.card];if(!c){go('#/cards');return ''}return shell(`<div class="screen">${back('Card Details','#/cards')}${vc(c,-1)}<div class="row"><div class="grow"><small>Card Holder</small><b>${esc(c.holder)}</b></div></div><div class="row"><div class="grow"><small>Card Type</small><b>${esc(c.brand)}</b></div></div><div class="row"><div class="grow"><small>Card Number</small><b>**** **** **** ${esc(c.last4)}</b></div></div><div class="row"><div class="grow"><small>Expiry Date</small><b>${esc(c.exp)}</b></div></div><div class="row"><div class="grow"><small>Added</small><b>${esc(c.added)}</b></div></div><div style="height:16px"></div><button class="btn out" onclick="removeCard()" style="color:var(--red)">Remove Card</button></div>${pnav('cards')}`)};
+R['transactions']=()=>shell(`<div class="screen">${back('Transactions','#/home')}${wallet.tx.length?wallet.tx.map(txRow).join(''):'<div class="empty">No transactions yet.</div>'}</div>${pnav('transactions')}`);
+R['profile']=()=>{const ks=kycOf();return shell(`<div class="screen"><div class="center" style="margin:10px 0 18px"><div class="av" style="width:68px;height:68px;border-radius:22px;font-size:22px;margin:0 auto 10px">${esc(initials(sess.name))}</div><h2>${esc(sess.name)}</h2><div class="sub">${esc(sess.email)}</div><div style="margin-top:8px">${pill(ks==='Verified'?'Verified':ks)}</div></div>
+<button class="mrow" onclick="go('#/notifications')"><span class="ico">${I('bell',17)}</span><span class="grow">Notifications</span>${I('chev',16)}</button>
+<button class="mrow" onclick="go('#/care')"><span class="ico">${I('support',17)}</span><span class="grow">Customer Care</span>${I('chev',16)}</button>
+<button class="mrow" onclick="go('#/bills')"><span class="ico">${I('bill',17)}</span><span class="grow">Pay Bills</span>${I('chev',16)}</button>
+<button class="mrow" onclick="go('#/loan')"><span class="ico">${I('loan',17)}</span><span class="grow">Loans</span>${I('chev',16)}</button>
+<div style="flex:1;min-height:20px"></div><button class="btn" onclick="logout()">Log Out</button></div>${pnav('profile')}`)};
 
 /* ============ ADMIN SCREENS ============ */
-const ALINKS=[['dashboard','▦','Dashboard'],['users','👥','Users'],['txns','🔁','Transactions'],['kyc','🪪','KYC'],['cards','💳','Card Management'],['banks','🏦','Bank Accounts'],['settings','⚙','Settings']];
-const ashell=(act,title,body)=>`<div class="adm"><aside class="side ${ui.nav?'open':''}"><h3><span class="logo" style="width:30px;height:30px;border-radius:8px;background:#fff"><svg viewBox="0 0 24 24" style="width:18px;fill:#0f8a4b">${BANK.replace(/<\/?svg[^>]*>/g,'')}</svg></span>MyBank Admin</h3>${ALINKS.map(l=>`<button class="${act===l[0]?'on':''}" onclick="ui.nav=false;go('#/admin/${l[0]}')"><span>${l[1]}</span>${l[2]}</button>`).join('')}<button onclick="logout()"><span>⏻</span>Logout</button></aside><div class="main"><div class="mtop"><button class="burger" onclick="ui.nav=!ui.nav;render()">☰</button><h1 style="font-size:22px">${title}</h1></div>${body}</div></div>`;
-const pill=s=>`<span class="pill ${['Active','Completed','Verified'].includes(s)?'p-ok':['Pending'].includes(s)?'p-wait':'p-bad'}">${s}</span>`;
+const pend=()=>({w:wds.filter(x=>x.s==='Pending').length,l:loans.filter(x=>x.s==='Pending').length,c:care.filter(x=>x.s==='Open').length,k:kyc.filter(x=>x.s==='Pending').length});
+const ALINKS=[['dashboard','chart','Dashboard'],['users','users','Users'],['txns','swap','Transactions'],['withdrawals','withdraw','Withdrawals','w'],['loans','loan','Loans','l'],['kyc','id','KYC','k'],['notify','bell','Notifications'],['support','support','Support','c'],['cards','card','Card Management'],['banks','bank','Bank Accounts'],['settings','gear','Settings']];
+const ashell=(act,title,body)=>{const p=pend();return `<div class="adm"><aside class="side ${ui.nav?'open':''}"><h3><span class="logo" style="width:30px;height:30px;border-radius:8px;background:#fff"><svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:#0f8a4b">${BANK.replace(/<\/?svg[^>]*>/g,'')}</svg></span>MyBank Admin</h3>${ALINKS.map(l=>`<button class="${act===l[0]?'on':''}" onclick="ui.nav=false;go('#/admin/${l[0]}')">${I(l[1],18)}${l[2]}${l[3]&&p[l[3]]?`<span class="cnt">${p[l[3]]}</span>`:''}</button>`).join('')}<button onclick="logout()">${I('logout',18)}Logout</button></aside><div class="main"><div class="mtop"><button class="burger" onclick="ui.nav=!ui.nav;render()">☰</button><h1 style="font-size:22px">${title}</h1></div>${body}</div></div>`};
 
-R['admin/dashboard']=()=>ashell('dashboard','Dashboard',`<div class="stats"><div class="stat"><span class="ico">👤</span><div><span class="sub">Total Users</span><b>2,445,200</b></div></div><div class="stat"><span class="ico">✔</span><div><span class="sub">Total Transactions</span><b>12,450</b></div></div></div><div class="panel"><b>User Growth</b><div class="sub">Last 30 days</div><svg viewBox="0 0 400 140" style="width:100%;margin-top:10px"><defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0f8a4b" stop-opacity=".35"/><stop offset="1" stop-color="#0f8a4b" stop-opacity="0"/></linearGradient></defs><path d="M0 120 L40 110 L80 114 L120 90 L160 96 L200 70 L240 76 L280 48 L320 54 L360 28 L400 20 L400 140 L0 140Z" fill="url(#g)"/><path d="M0 120 L40 110 L80 114 L120 90 L160 96 L200 70 L240 76 L280 48 L320 54 L360 28 L400 20" fill="none" stroke="#0f8a4b" stroke-width="3"/></svg></div>`);
-R['admin/users']=()=>{const q=ui.q.toLowerCase();return ashell('users','Users',`<div class="panel"><div class="sbar"><input placeholder="Search user..." value="${ui.q}" oninput="ui.q=this.value;render(true)" id="usr_q"><button class="gbtn" onclick="addUser()">+ Add User</button></div><div class="tblwrap"><table class="tbl"><tr><th>Name</th><th>Email</th><th>Status</th><th>Actions</th></tr>${users.map((u,i)=>[u,i]).filter(([u])=>(u.n+u.e).toLowerCase().includes(q)).map(([u,i])=>`<tr><td>${u.n}</td><td>${u.e}</td><td>${pill(u.s)}</td><td><button class="mini" onclick="toggleUser(${i})">${u.s==='Active'?'Suspend':'Activate'}</button></td></tr>`).join('')}</table></div></div>`)};
-R['admin/txns']=()=>{const f=atx.filter(t=>ui.ttype==='All Types'||t.t===ui.ttype);return ashell('txns','Transactions',`<div class="panel"><div class="sbar"><select onchange="ui.ttype=this.value;render()">${['All Types','Deposit','Transfer','Withdrawal'].map(o=>`<option ${o===ui.ttype?'selected':''}>${o}</option>`).join('')}</select><select><option>Today</option><option>This week</option><option>This month</option></select></div><div class="tblwrap"><table class="tbl"><tr><th>ID</th><th>User</th><th>Type</th><th>Amount</th><th>Status</th></tr>${f.map(t=>`<tr><td>${t.id}</td><td>${t.u}</td><td>${t.t}</td><td class="${t.a>0?'pos':'neg'}">${t.a>0?'+':'-'}${money(Math.abs(t.a))}</td><td>${pill(t.s)}</td></tr>`).join('')}</table></div></div>`)};
-R['admin/kyc']=()=>{const c=s=>kyc.filter(k=>k.s===s).length;const f=kyc.map((k,i)=>[k,i]).filter(([k])=>k.s===ui.ktab);return ashell('kyc','KYC Verification',`<div class="panel"><div class="tabs">${[['Pending',130],['Verified','2,450'],['Rejected',50]].map(t=>`<button class="${ui.ktab===t[0]?'on':''}" onclick="ui.ktab='${t[0]}';render()">${t[0]} (${t[1]})</button>`).join('')}</div><div class="tblwrap"><table class="tbl"><tr><th>ID</th><th>User</th><th>Type</th><th>Status</th><th>Action</th></tr>${f.length?f.map(([k,i])=>`<tr><td>${k.id}</td><td>${k.u}</td><td>${k.t}</td><td>${pill(k.s)}</td><td>${k.s==='Pending'?`<button class="mini" onclick="setKyc(${i},'Verified')">Approve</button><button class="mini" onclick="setKyc(${i},'Rejected')">Reject</button>`:'—'}</td></tr>`).join(''):'<tr><td colspan="5" class="sub">Nothing here</td></tr>'}</table></div></div>`)};
-R['admin/cards']=()=>ashell('cards','Card Details',`<div class="panel"><div class="tabs">${['Cards','Transactions'].map(t=>`<button class="${ui.ctab===t?'on':''}" onclick="ui.ctab='${t}';render()">${t}</button>`).join('')}</div>${ui.ctab==='Cards'?`<div class="vcard" style="max-width:420px"><b>MyBank</b><div class="chip"></div><div class="num">**** **** **** 1234</div><div style="display:flex;justify-content:space-between;font-size:12px"><span>John Doe</span><b>VISA</b></div></div><div style="display:flex;gap:10px;max-width:420px"><button class="btn sm out" style="flex:1" onclick="toast('Card details open here once backend is connected')">View Details</button><button class="btn sm" style="flex:1" onclick="toast('Card editing opens here once backend is connected')">Edit Card</button></div><div style="display:flex;justify-content:space-between;max-width:420px;margin-top:16px"><div><span class="sub">Card Holder</span><br><b>John Doe</b></div><div><span class="sub">Expiry Date</span><br><b>12/28</b></div></div>`:`<div class="tblwrap"><table class="tbl"><tr><th>ID</th><th>User</th><th>Amount</th><th>Status</th></tr>${atx.slice(0,3).map(t=>`<tr><td>${t.id}</td><td>${t.u}</td><td>${money(Math.abs(t.a))}</td><td>${pill(t.s)}</td></tr>`).join('')}</table></div>`}</div>`);
+R['admin/dashboard']=()=>{const p=pend();return ashell('dashboard','Dashboard',`<div class="stats"><div class="stat"><span class="ico">${I('users',20)}</span><div><span class="sub">Total Users</span><b>2,445,200</b></div></div><div class="stat"><span class="ico">${I('swap',20)}</span><div><span class="sub">Total Transactions</span><b>12,450</b></div></div><div class="stat" style="cursor:pointer" onclick="go('#/admin/withdrawals')"><span class="ico">${I('withdraw',20)}</span><div><span class="sub">Pending Withdrawals</span><b>${p.w}</b></div></div><div class="stat" style="cursor:pointer" onclick="go('#/admin/loans')"><span class="ico">${I('loan',20)}</span><div><span class="sub">Pending Loans</span><b>${p.l}</b></div></div><div class="stat" style="cursor:pointer" onclick="go('#/admin/support')"><span class="ico">${I('support',20)}</span><div><span class="sub">Open Support Tickets</span><b>${p.c}</b></div></div></div><div class="panel"><b>User Growth</b><div class="sub">Last 30 days</div><svg viewBox="0 0 400 140" style="width:100%;margin-top:10px"><defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0f8a4b" stop-opacity=".35"/><stop offset="1" stop-color="#0f8a4b" stop-opacity="0"/></linearGradient></defs><path d="M0 120 L40 110 L80 114 L120 90 L160 96 L200 70 L240 76 L280 48 L320 54 L360 28 L400 20 L400 140 L0 140Z" fill="url(#g)"/><path d="M0 120 L40 110 L80 114 L120 90 L160 96 L200 70 L240 76 L280 48 L320 54 L360 28 L400 20" fill="none" stroke="#0f8a4b" stroke-width="3"/></svg></div>`)};
+R['admin/users']=()=>{const q=ui.q.toLowerCase();return ashell('users','Users',`<div class="panel"><div class="sbar"><input placeholder="Search user..." value="${esc(ui.q)}" oninput="ui.q=this.value;render(true)" id="usr_q"><button class="gbtn" onclick="addUser()">+ Add User</button></div><div class="tblwrap"><table class="tbl"><tr><th>Name</th><th>Email</th><th>Status</th><th>Actions</th></tr>${users.map((u,i)=>[u,i]).filter(([u])=>(u.n+u.e).toLowerCase().includes(q)).map(([u,i])=>`<tr><td>${esc(u.n)}</td><td>${esc(u.e)}</td><td>${pill(u.s)}</td><td><button class="mini" onclick="toggleUser(${i})">${u.s==='Active'?'Suspend':'Activate'}</button></td></tr>`).join('')}</table></div></div>`)};
+R['admin/txns']=()=>{const f=atx.filter(t=>ui.ttype==='All Types'||t.t===ui.ttype);return ashell('txns','Transactions',`<div class="panel"><div class="sbar"><select onchange="ui.ttype=this.value;render()">${['All Types','Deposit','Transfer','Withdrawal'].map(o=>`<option ${o===ui.ttype?'selected':''}>${o}</option>`).join('')}</select><select><option>Today</option><option>This week</option><option>This month</option></select></div><div class="tblwrap"><table class="tbl"><tr><th>ID</th><th>User</th><th>Type</th><th>Amount</th><th>Status</th></tr>${f.map(t=>`<tr><td>${t.id}</td><td>${esc(t.u)}</td><td>${t.t}</td><td class="${t.a>0?'pos':'neg'}">${t.a>0?'+':'-'}${fmt(Math.abs(t.a),'USD')}</td><td>${pill(t.s)}</td></tr>`).join('')}</table></div></div>`)};
+R['admin/withdrawals']=()=>ashell('withdrawals','Withdrawal Requests',`<div class="panel"><div class="tblwrap"><table class="tbl"><tr><th>ID</th><th>Customer</th><th>Amount</th><th>Payout Details</th><th>Date</th><th>Status</th><th>Action</th></tr>${wds.length?wds.slice().reverse().map(w=>`<tr><td>${w.id}</td><td>${esc(w.u)}<br><span class="sub">${esc(w.e)}</span></td><td><b>${fmt(w.amt,w.cur)}</b></td><td>${esc(w.bank)}<br>${esc(w.acct)}<br>${esc(w.holder)}${w.code?'<br>Code: '+esc(w.code):''}${w.note?'<br><span class="sub">'+esc(w.note)+'</span>':''}</td><td>${esc(w.date)}</td><td>${pill(w.s)}</td><td>${w.s==='Pending'?`<button class="mini" onclick="wdSet('${w.id}','Completed')">Approve</button><button class="mini" onclick="wdSet('${w.id}','Rejected')">Reject</button>`:'—'}</td></tr>`).join(''):'<tr><td colspan="7" class="sub">No withdrawal requests yet.</td></tr>'}</table></div></div>`);
+R['admin/loans']=()=>ashell('loans','Loan Requests',`<div class="panel"><div class="tblwrap"><table class="tbl"><tr><th>ID</th><th>Customer</th><th>Amount</th><th>Term</th><th>Monthly</th><th>Purpose</th><th>Status</th><th>Action</th></tr>${loans.length?loans.slice().reverse().map(l=>`<tr><td>${l.id}</td><td>${esc(l.u)}<br><span class="sub">${esc(l.e)}</span></td><td><b>${fmt(l.amt,l.cur)}</b></td><td>${l.months} mo</td><td>${fmt(l.monthly,l.cur)}</td><td>${esc(l.purpose)}</td><td>${pill(l.s)}</td><td>${l.s==='Pending'?`<button class="mini" onclick="loanSet('${l.id}','Approved')">Approve</button><button class="mini" onclick="loanSet('${l.id}','Rejected')">Reject</button>`:'—'}</td></tr>`).join(''):'<tr><td colspan="8" class="sub">No loan requests yet.</td></tr>'}</table></div></div>`);
+const kdet=k=>{const r=reg.find(x=>x.email===k.e);if(!r)return `<div class="panel sub">No enrollment details are on file for this record.</div>`;
+ const d=(l,v)=>`<div><small>${l}</small>${esc(v)||'—'}</div>`;
+ return `<div class="panel"><b>${esc(r.name)} — enrollment details</b><div class="det" style="margin-top:12px">${d('Email',r.email)}${d('Phone',r.phone)}${d('Date of birth',r.dob)}${d('Gender',r.gender)}${d('Occupation',r.occupation)}${d('Tax ID / SSN','•••• '+r.taxLast4)}${d('Address',[r.address,r.city,r.zip,r.country].filter(Boolean).join(', '))}${d('Currency',r.currency)}${d('Next of kin',r.nok.name+' ('+r.nok.relationship+')')}${d('Next of kin contact',r.nok.phone+' · '+r.nok.email)}${d('Next of kin address',r.nok.address)}${d('Passport photo',r.photoName)}${d(r.docType,r.docName)}</div><div class="sub" style="margin-top:10px">Uploaded files are not stored in this demo. Only file names are kept until a backend is connected.</div></div>`};
+R['admin/kyc']=()=>{const c=s=>kyc.filter(k=>k.s===s).length;const f=kyc.map((k,i)=>[k,i]).filter(([k])=>k.s===ui.ktab);return ashell('kyc','KYC Verification',`<div class="panel"><div class="tabs">${['Pending','Verified','Rejected'].map(t=>`<button class="${ui.ktab===t?'on':''}" onclick="ui.ktab='${t}';ui.kview='';render()">${t} (${c(t)})</button>`).join('')}</div><div class="tblwrap"><table class="tbl"><tr><th>ID</th><th>User</th><th>Type</th><th>Status</th><th>Action</th></tr>${f.length?f.map(([k,i])=>`<tr><td>${k.id}</td><td>${esc(k.u)}</td><td>${esc(k.t)}</td><td>${pill(k.s)}</td><td>${k.e?`<button class="mini" onclick="ui.kview=ui.kview==='${k.id}'?'':'${k.id}';render()">Details</button>`:''}${k.s==='Pending'?`<button class="mini" onclick="setKyc(${i},'Verified')">Approve</button><button class="mini" onclick="setKyc(${i},'Rejected')">Reject</button>`:(k.e?'':'—')}</td></tr>`).join(''):'<tr><td colspan="5" class="sub">Nothing here</td></tr>'}</table></div></div>${ui.kview?(()=>{const k=kyc.find(x=>x.id===ui.kview);return k?kdet(k):''})():''}`)};
+R['admin/notify']=()=>{const sent=notes.filter(n=>n.from==='Admin').slice().reverse().slice(0,30);return ashell('notify','Notifications',`<div class="panel"><b>Send a notification</b><form onsubmit="return sendNote(event)" style="margin-top:12px;max-width:560px"><label class="l">Send to</label><select class="field" id="nt_to"><option value="all">All customers</option>${users.map(u=>`<option value="${esc(u.e)}">${esc(u.n)} (${esc(u.e)})</option>`).join('')}</select><label class="l">Title</label><input class="field" id="nt_t" maxlength="80" required><label class="l">Message</label><textarea class="field" id="nt_m" rows="4" maxlength="600" required></textarea><button class="gbtn">Send Notification</button></form></div><div class="panel"><b>Recently sent</b><div class="tblwrap" style="margin-top:10px"><table class="tbl"><tr><th>Date</th><th>To</th><th>Title</th><th>Message</th></tr>${sent.length?sent.map(n=>`<tr><td>${fdt(n.date)}</td><td>${n.to==='all'?'All customers':esc(n.to)}</td><td>${esc(n.title)}</td><td>${esc(n.body)}</td></tr>`).join(''):'<tr><td colspan="4" class="sub">Nothing sent yet.</td></tr>'}</table></div></div>`)};
+R['admin/support']=()=>ashell('support','Customer Support',`<div class="panel"><div class="tblwrap"><table class="tbl"><tr><th>Date</th><th>Customer</th><th>Topic</th><th>Message</th><th>Status</th><th>Action</th></tr>${care.length?care.slice().reverse().map(c=>`<tr><td>${esc(c.date)}</td><td>${esc(c.u)}<br><span class="sub">${esc(c.e)}</span></td><td>${esc(c.subject)}</td><td style="max-width:280px">${esc(c.msg)}${c.reply?`<div class="reply">${esc(c.reply)}</div>`:''}</td><td>${pill(c.s)}</td><td><button class="mini" onclick="replyCare('${c.id}')">${c.reply?'Reply again':'Reply'}</button></td></tr>`).join(''):'<tr><td colspan="6" class="sub">No messages yet.</td></tr>'}</table></div></div>`);
+R['admin/cards']=()=>ashell('cards','Card Details',`<div class="panel"><div class="tabs">${['Cards','Transactions'].map(t=>`<button class="${ui.ctab===t?'on':''}" onclick="ui.ctab='${t}';render()">${t}</button>`).join('')}</div>${ui.ctab==='Cards'?`<div class="vcard" style="max-width:420px"><b>MyBank</b><div class="chip"></div><div class="num">**** **** **** 1234</div><div style="display:flex;justify-content:space-between;font-size:12px"><span>John Doe</span><b>VISA</b></div></div><div style="display:flex;gap:10px;max-width:420px"><button class="btn sm out" style="flex:1" onclick="toast('Card details open here once backend is connected')">View Details</button><button class="btn sm" style="flex:1" onclick="toast('Card editing opens here once backend is connected')">Edit Card</button></div><div style="display:flex;justify-content:space-between;max-width:420px;margin-top:16px"><div><span class="sub">Card Holder</span><br><b>John Doe</b></div><div><span class="sub">Expiry Date</span><br><b>12/28</b></div></div>`:`<div class="tblwrap"><table class="tbl"><tr><th>ID</th><th>User</th><th>Amount</th><th>Status</th></tr>${atx.slice(0,3).map(t=>`<tr><td>${t.id}</td><td>${esc(t.u)}</td><td>${fmt(Math.abs(t.a),'USD')}</td><td>${pill(t.s)}</td></tr>`).join('')}</table></div>`}</div>`);
 R['admin/banks']=()=>ashell('banks','Bank Accounts',`<div class="panel"><div class="tblwrap"><table class="tbl"><tr><th>User</th><th>Bank Name</th><th>Account Number</th><th>Status</th></tr>${banks.map(b=>`<tr><td>${b[0]}</td><td>${b[1]}</td><td>${b[2]}</td><td>${pill(b[3])}</td></tr>`).join('')}</table></div></div>`);
-R['admin/settings']=()=>ashell('settings','Admin Settings',`<div class="panel">${[['⚙','System Settings'],['👥','User Roles'],['🛡','Security Logs'],['🔑','API Keys'],['☁','Backup & Restore'],['🔔','Notifications']].map(s=>`<div class="setrow" onclick="toast('${s[1]} will be connected with the backend')"><span class="ico" style="background:#e3f6ec;color:var(--green)">${s[0]}</span><b class="grow">${s[1]}</b><span>›</span></div>`).join('')}</div>`);
+R['admin/settings']=()=>ashell('settings','Admin Settings',`<div class="panel">${[['gear','System Settings',"toast('System Settings will be connected with the backend')"],['users','User Roles',"toast('User Roles will be connected with the backend')"],['shield','Security Logs',"toast('Security Logs will be connected with the backend')"],['lock','API Keys',"toast('API Keys will be connected with the backend')"],['upload','Backup & Restore',"toast('Backup & Restore will be connected with the backend')"],['bell','Notifications',"go('#/admin/notify')"]].map(s=>`<div class="setrow" onclick="${s[2]}"><span class="ico" style="background:#e3f6ec;color:var(--green)">${I(s[0],17)}</span><b class="grow">${s[1]}</b>${I('chev',16)}</div>`).join('')}</div>`);
 
 /* ============ ACTIONS ============ */
 function doLogin(e){e.preventDefault();const id=$('#lg_e').value.trim().toLowerCase(),pw=$('#lg_p').value;
  if(id===DEMO.admin.username&&pw===DEMO.admin.password){sess={role:'admin'};save('mb_sess',sess);go('#/admin/dashboard');return false}
- let u=null;if(id===DEMO.customer.email&&pw===DEMO.customer.password)u={name:DEMO.customer.name,email:DEMO.customer.email};
- else{const r=reg.find(x=>(x.email.toLowerCase()===id||x.phone===id)&&x.pw===pw);if(r)u={name:r.name,email:r.email}}
+ let u=null;if(id===DEMO.customer.email&&pw===DEMO.customer.password)u={name:DEMO.customer.name,email:DEMO.customer.email,currency:'USD'};
+ else{const r=reg.find(x=>(x.email.toLowerCase()===id||x.phone===id)&&x.pw===pw);if(r)u={name:r.name,email:r.email,currency:r.currency||'USD'}}
  if(!u){$('#lg_err').textContent='Incorrect email/phone or password.';return false}
  sess={role:'user',...u};save('mb_sess',sess);go('#/home');return false}
-function doSignup(e){e.preventDefault();const email=$('#su_e').value.trim();
- if(/^admin(@|$)/i.test(email)){$('#su_err').textContent='This email is reserved.';return false}
- if(reg.some(r=>r.email.toLowerCase()===email.toLowerCase())||email.toLowerCase()===DEMO.customer.email){$('#su_err').textContent='An account with this email already exists.';return false}
- reg.push({name:$('#su_n').value.trim(),email,phone:$('#su_p').value.trim(),pw:$('#su_pw').value});users.push({n:$('#su_n').value.trim(),e:email,s:'Active'});persist();toast('Account created. Please log in.');go('#/login');return false}
+
+/* --- signup helpers --- */
+function fillCities(){const c=$('#su_country').value,s=$('#su_city');
+ if(!c){s.innerHTML='<option value="">Select Country First</option>';s.disabled=true;$('#su_city_o').classList.add('hidden');return}
+ const list=COUNTRIES[c]||[];s.disabled=false;
+ s.innerHTML='<option value="">Select City</option>'+list.map(x=>`<option>${esc(x)}</option>`).join('')+'<option value="__o">Other (type it in)</option>';
+ if(!list.length)s.value='__o';cityPick()}
+function cityPick(){$('#su_city_o').classList.toggle('hidden',$('#su_city').value!=='__o')}
+const OKMIME=['image/png','image/jpeg','image/gif'];
+function checkFile(inp){const f=inp.files[0];if(!f)return 'Please upload this file.';const pdf=inp.dataset.pdf==='1';
+ const ext=f.name.split('.').pop().toLowerCase();const exts=pdf?['pdf','png','jpg','jpeg','gif']:['png','jpg','jpeg','gif'];const mimes=pdf?OKMIME.concat('application/pdf'):OKMIME;
+ if(!exts.includes(ext)||(f.type&&!mimes.includes(f.type)))return 'Unsupported file type. Use '+(pdf?'PDF, PNG, JPG or GIF.':'PNG, JPG or GIF.');
+ if(f.size>5*1024*1024)return 'That file is larger than 5 MB.';return ''}
+function fileChosen(inp){const t=$('#'+inp.id+'_t'),f=inp.files[0];if(!f){t.textContent='Choose file';return}
+ const m=checkFile(inp);if(m){toast(m);inp.value='';t.textContent='Choose file';return}
+ t.textContent=f.name+' ('+(f.size/1048576).toFixed(1)+' MB)'}
+const PHONE=/^[+()\d\s-]{7,20}$/;
+function doSignup(e){e.preventDefault();
+ const v=id=>$('#'+id).value.trim();
+ const err=m=>{const x=$('#su_err');x.textContent=m;x.scrollIntoView({block:'center',behavior:'smooth'});return false};
+ const email=v('su_e'),phone=v('su_p');
+ if(/^admin(@|$)/i.test(email))return err('This email is reserved.');
+ if(!PHONE.test(phone)||phone.replace(/\D/g,'').length<7)return err('Enter a valid phone number.');
+ if(reg.some(r=>r.email.toLowerCase()===email.toLowerCase()||r.phone===phone)||email.toLowerCase()===DEMO.customer.email)return err('An account with this email or phone already exists.');
+ const dob=new Date(v('su_dob')+'T00:00:00'),lim=new Date();lim.setFullYear(lim.getFullYear()-18);
+ if(isNaN(dob)||dob.getFullYear()<1900)return err('Enter a valid date of birth.');
+ if(dob>lim)return err('You must be at least 18 years old to open an account.');
+ const ssn=$('#su_ssn').value.replace(/[\s-]/g,'');if(!/^[A-Za-z0-9]{4,20}$/.test(ssn))return err('Enter a valid Social Security Number / Tax ID.');
+ const cs=$('#su_city').value,city=cs==='__o'?v('su_city_o'):cs;if(!city)return err('Please choose or type your city.');
+ if(!PHONE.test(v('nk_p'))||v('nk_p').replace(/\D/g,'').length<7)return err("Enter a valid phone number for your next of kin.");
+ const pw=$('#su_pw').value;if(pw.length<8)return err('Password must be at least 8 characters.');
+ if(pw!==$('#su_pw2').value)return err('Passwords do not match.');
+ const pin=$('#su_pin').value;if(!/^\d{4}$/.test(pin))return err('PIN must be exactly 4 digits.');
+ const ph=$('#su_photo'),dc=$('#su_doc');
+ let m=checkFile(ph);if(m)return err('Passport photograph: '+m);
+ if(!$('#su_doct').value)return err('Select your means of identification.');
+ m=checkFile(dc);if(m)return err('Identity document: '+m);
+ const rec={name:v('su_n'),email,phone,pw,pin,dob:v('su_dob'),gender:$('#su_g').value,taxLast4:ssn.slice(-4),occupation:v('su_occ'),
+  country:$('#su_country').value,city,zip:v('su_zip'),address:v('su_addr'),
+  nok:{name:v('nk_n'),email:v('nk_e'),phone:v('nk_p'),relationship:v('nk_r'),address:v('nk_a')},
+  currency:$('#su_cur').value,docType:$('#su_doct').value,photoName:ph.files[0].name,docName:dc.files[0].name,created:new Date().toISOString()};
+ reg.push(rec);users.push({n:rec.name,e:email,s:'Active'});
+ kyc.unshift({id:uid('KYC'),e:email,u:rec.name,t:rec.docType,s:'Pending'});
+ pushNote(email,'Welcome to MyBank','Your account has been created. Your identity documents are being reviewed. Withdrawals and loans will unlock once they are approved.');
+ persist();toast('Account created. Please log in.');go('#/login');return false}
+
 const getCards=()=>load('mb_cards:'+sess.email,[]);
 const setCards=c=>save('mb_cards:'+sess.email,c);
 function luhn(n){let s=0,d=false;for(let i=n.length-1;i>=0;i--){let x=+n[i];if(d){x*=2;if(x>9)x-=9}s+=x;d=!d}return s%10===0}
@@ -222,17 +526,69 @@ function doAddCard(e){e.preventDefault();const n=$('#cd_c').value.replace(/\D/g,
  cs.push({holder:$('#cd_n').value.trim(),brand:brandOf(n),last4:n.slice(-4),exp:ex,added:now.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})});
  setCards(cs);$('#cd_c').value=$('#cd_v').value='';toast('Card added');go('#/cards');return false}
 function removeCard(){if(!confirm('Remove this card?'))return;const cs=getCards();cs.splice(ui.card,1);setCards(cs);toast('Card removed');go('#/cards')}
-function logout(){sess=null;localStorage.removeItem('mb_sess');go('#/login')}
-function doSend(e){e.preventDefault();const a=parseFloat($('#sm_a').value);if(a>wallet.balance){$('#sm_err').textContent='Insufficient balance.';return false}
- wallet.balance-=a;wallet.tx.unshift({n:'Sent to '+$('#sm_r').value,d:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),a:-a,i:'↗'});persist();toast('Transfer of '+money(a)+' sent');go('#/home');return false}
-function amountAction(k){const v=parseFloat(prompt((k==='deposit'?'Deposit':'Withdraw')+' amount ($)'));if(!(v>0))return;
- if(k==='withdraw'&&v>wallet.balance){toast('Insufficient balance');return}
- wallet.balance+=k==='deposit'?v:-v;wallet.tx.unshift({n:k==='deposit'?'Deposit':'Withdrawal',d:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),a:k==='deposit'?v:-v,i:k==='deposit'?'⬇':'🏦'});persist();toast('Done');go('#/home')}
+function logout(){sess=null;wallet=null;localStorage.removeItem('mb_sess');go('#/login')}
+
+function doSend(e){e.preventDefault();const a=Math.round(parseFloat($('#sm_a').value)*100)/100,err=m=>{$('#sm_err').textContent=m;return false};
+ if(!(a>0))return err('Enter a valid amount.');
+ if(a>wallet.balance)return err('Insufficient balance.');
+ wallet.balance=Math.round((wallet.balance-a)*100)/100;wallet.tx.unshift({n:'Sent to '+$('#sm_r').value.trim(),d:today(),a:-a,i:'send'});persist();toast('Transfer of '+money(a)+' sent');go('#/home');return false}
+function amountAction(){const v=Math.round(parseFloat(prompt('Deposit amount ('+sym().trim()+')'))*100)/100;if(!(v>0))return;
+ wallet.balance=Math.round((wallet.balance+v)*100)/100;wallet.tx.unshift({n:'Deposit',d:today(),a:v,i:'deposit'});persist();toast('Deposit added');go('#/home')}
 function payBill(i){const b=bills[i];if(b.a>wallet.balance){toast('Insufficient balance');return}
- if(!confirm('Pay '+b.n+' '+money(b.a)+'?'))return;wallet.balance-=b.a;wallet.tx.unshift({n:b.n,d:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),a:-b.a,i:b.i});persist();toast('Bill paid');go('#/home')}
+ if(!confirm('Pay '+b.n+' '+money(b.a)+'?'))return;wallet.balance=Math.round((wallet.balance-b.a)*100)/100;wallet.tx.unshift({n:b.n,d:today(),a:-b.a,i:b.i});persist();toast('Bill paid');go('#/home')}
+
+function doWithdraw(e){e.preventDefault();const err=m=>{$('#wd_err').textContent=m;return false};
+ if(kycOf()!=='Verified')return err('Complete identity verification before withdrawing.');
+ const a=Math.round(parseFloat($('#wd_a').value)*100)/100;if(!(a>0))return err('Enter a valid amount.');
+ if(a>wallet.balance)return err('Insufficient balance.');
+ const acct=$('#wd_n').value.replace(/\s/g,'');if(!/^[A-Za-z0-9]{6,34}$/.test(acct))return err('Enter a valid account number or IBAN.');
+ if(Date.now()<ui.lock)return err('Too many wrong PIN attempts. Please try again in a few minutes.');
+ if($('#wd_p').value!==myPin()){ui.fail++;if(ui.fail>=3){ui.lock=Date.now()+5*60000;ui.fail=0}return err('Incorrect PIN.')}
+ ui.fail=0;
+ const id=uid('WD'),bank=$('#wd_b').value.trim();
+ wds.push({id,e:sess.email,u:sess.name,cur:curCode(),amt:a,bank,acct,holder:$('#wd_h').value.trim(),code:$('#wd_c').value.trim(),note:$('#wd_m').value.trim(),date:today(),s:'Pending'});
+ wallet.balance=Math.round((wallet.balance-a)*100)/100;wallet.tx.unshift({n:'Withdrawal to '+bank,d:today(),a:-a,i:'withdraw',s:'Pending',wid:id});
+ pushNote(sess.email,'Withdrawal request received','Your request to withdraw '+money(a)+' to '+bank+' is being processed. Reference: '+id+'.');
+ persist();toast('Withdrawal request submitted');render();return false}
+function wdSet(id,s){const w=wds.find(x=>x.id===id);if(!w||w.s!=='Pending')return;
+ if(!confirm((s==='Completed'?'Approve':'Reject')+' withdrawal '+id+'?'))return;
+ const wl=walletOf(w.e),t=wl.tx.find(x=>x.wid===id);if(t)t.s=s;
+ if(s==='Rejected'){wl.balance=Math.round((wl.balance+w.amt)*100)/100;wl.tx.unshift({n:'Refund: withdrawal '+id,d:today(),a:w.amt,i:'deposit'})}
+ saveWalletOf(w.e,wl);w.s=s;
+ pushNote(w.e,s==='Completed'?'Withdrawal completed':'Withdrawal declined',s==='Completed'?'Your withdrawal of '+fmt(w.amt,w.cur)+' to '+w.bank+' has been processed. Reference: '+id+'.':'Your withdrawal of '+fmt(w.amt,w.cur)+' ('+id+') was declined and the amount has been returned to your balance. Contact customer care for details.');
+ persist();render()}
+
+function loanEst(){const a=parseFloat($('#ln_a').value),n=+$('#ln_t').value,o=$('#ln_est');
+ if(!(a>0)){o.innerHTML='';return}const c=loanCalc(a,n);
+ o.innerHTML=`<div><span>Monthly repayment</span><b>${money(c.m)}</b></div><div><span>Total repayment</span><b>${money(c.total)}</b></div><div><span>Interest rate</span><b>${LOAN.apr}% p.a.</b></div><small>Indicative figures. Final terms are confirmed on approval.</small>`}
+function doLoan(e){e.preventDefault();const err=m=>{$('#ln_err').textContent=m;return false};
+ if(kycOf()!=='Verified')return err('Complete identity verification before applying.');
+ const a=Math.round(parseFloat($('#ln_a').value)*100)/100,n=+$('#ln_t').value;if(!(a>0))return err('Enter a valid loan amount.');
+ if(!$('#ln_p').value)return err('Select a purpose.');
+ if(loans.some(l=>l.e===sess.email&&l.s==='Pending'))return err('You already have a loan request under review.');
+ const c=loanCalc(a,n);
+ loans.push({id:uid('LN'),e:sess.email,u:sess.name,cur:curCode(),amt:a,months:n,purpose:$('#ln_p').value,rate:LOAN.apr,monthly:Math.round(c.m*100)/100,date:today(),s:'Pending'});
+ pushNote(sess.email,'Loan application received','Your request for a loan of '+money(a)+' over '+n+' months is under review. We will notify you of the decision.');
+ persist();toast('Loan application submitted');render();return false}
+function loanSet(id,s){const l=loans.find(x=>x.id===id);if(!l||l.s!=='Pending')return;
+ if(!confirm((s==='Approved'?'Approve':'Reject')+' loan '+id+'?'))return;
+ if(s==='Approved')adjust(l.e,l.amt,{n:'Loan disbursed',d:today(),a:l.amt,i:'loan'});
+ l.s=s;
+ pushNote(l.e,s==='Approved'?'Loan approved':'Loan not approved',s==='Approved'?'Your loan of '+fmt(l.amt,l.cur)+' has been approved and credited to your balance.':'We could not approve your loan request of '+fmt(l.amt,l.cur)+' at this time. Contact customer care for details.');
+ persist();render()}
+
+function doCare(e){e.preventDefault();const m=$('#cc_m').value.trim();if(!m){$('#cc_err').textContent='Please type a message.';return false}
+ care.push({id:uid('CC'),e:sess.email,u:sess.name,subject:$('#cc_s').value,msg:m,date:today(),s:'Open'});persist();toast('Message sent to customer care');render();return false}
+function replyCare(id){const c=care.find(x=>x.id===id);if(!c)return;const r=prompt('Reply to '+c.u);if(!r||!r.trim())return;
+ c.reply=r.trim();c.s='Answered';pushNote(c.e,'Customer care replied','Re: '+c.subject+'\n'+c.reply);persist();render()}
+function sendNote(e){e.preventDefault();const to=$('#nt_to').value,t=$('#nt_t').value.trim(),b=$('#nt_m').value.trim();if(!t||!b)return false;
+ pushNote(to,t,b,'Admin');persist();toast('Notification sent');render();return false}
+
 function addUser(){const n=prompt('Full name');if(!n)return;const e=prompt('Email');if(!e)return;users.push({n,e,s:'Active'});persist();render()}
 function toggleUser(i){users[i].s=users[i].s==='Active'?'Suspended':'Active';persist();render()}
-function setKyc(i,s){kyc[i].s=s;persist();render()}
+function setKyc(i,s){const k=kyc[i];k.s=s;
+ if(k.e)pushNote(k.e,s==='Verified'?'Identity verified':'Identity verification not approved',s==='Verified'?'Your identity documents have been approved. Withdrawals and loans are now available.':'We could not approve your identity documents. Please contact customer care.');
+ persist();render()}
 
 /* ============ ROUTER ============ */
 function render(keepFocus){
@@ -243,6 +599,7 @@ function render(keepFocus){
  if(isAdmin&&!(sess&&sess.role==='admin')){go('#/login');return}
  if(!isAdmin&&!pub&&!(sess&&sess.role==='user')){go('#/login');return}
  if(pub&&r==='login'&&sess){go(sess.role==='admin'?'#/admin/dashboard':'#/home');return}
+ if(sess&&sess.role==='user')wallet=walletOf(sess.email);
  app.innerHTML=R[r]();
  if(keepFocus){const q=$('#usr_q');if(q){q.focus();q.setSelectionRange(q.value.length,q.value.length)}}
 }
