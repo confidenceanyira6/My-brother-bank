@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MyBank App</title>
+<style>
+:root{--blue:#0b4fe0;--blue2:#0a3fb8;--navy:#06185a;--green:#0f8a4b;--green2:#0b6e3b;--bg:#f4f6fb;--line:#e3e8f2;--txt:#101828;--mut:#667085;--red:#e5484d;--amber:#f5a524}
+*{box-sizing:border-box;margin:0;padding:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+body{background:linear-gradient(160deg,#061a5c,#0a2a8f 60%,#041246);min-height:100vh;color:var(--txt)}
+button{cursor:pointer;border:0;font-size:15px}
+input,select{font-size:15px;outline:0}
+.hidden{display:none!important}
+/* USER PHONE */
+.stage{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px}
+.phone{width:100%;max-width:400px;height:min(820px,100vh - 32px);background:#fff;border-radius:34px;overflow:hidden;position:relative;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.45)}
+@media(max-width:480px){.stage{padding:0}.phone{max-width:none;height:100vh;border-radius:0}}
+.status{display:flex;justify-content:space-between;padding:12px 22px 4px;font-size:12px;font-weight:700}
+.screen{flex:1;overflow:auto;padding:14px 20px 20px;display:flex;flex-direction:column}
+.dark{background:linear-gradient(170deg,#0a3fb8,#06185a);color:#fff}
+.logo{width:76px;height:76px;border-radius:18px;background:var(--blue);display:grid;place-items:center;margin:0 auto}
+.logo svg{width:44px;height:44px;fill:#fff}
+.center{text-align:center}
+h1{font-size:26px}h2{font-size:20px}
+.sub{color:var(--mut);font-size:13px}
+.btn{width:100%;padding:14px;border-radius:10px;background:var(--blue);color:#fff;font-weight:700}
+.btn.white{background:#fff;color:var(--blue)}
+.btn.green{background:var(--green)}
+.btn.sm{width:auto;padding:9px 14px;font-size:13px}
+.btn.out{background:#eaf0ff;color:var(--blue)}
+.field{width:100%;padding:14px;border:1px solid var(--line);border-radius:10px;margin-bottom:12px;background:#fff;color:var(--txt)}
+.field:focus{border-color:var(--blue)}
+label.l{display:block;font-size:13px;font-weight:600;margin:6px 0}
+.link{color:var(--blue);font-weight:700;cursor:pointer;background:none}
+.top{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.back{background:none;font-size:22px;color:var(--txt)}
+.feat{display:flex;align-items:center;gap:12px;margin:12px 0;font-size:14px;font-weight:600}
+.ico{width:32px;height:32px;border-radius:50%;background:#e6eeff;color:var(--blue);display:grid;place-items:center;font-size:15px;flex:none}
+.bal{background:linear-gradient(135deg,#0b4fe0,#0a3fb8);color:#fff;border-radius:14px;padding:16px;margin:14px 0}
+.bal b{font-size:30px;display:block;margin-top:4px}
+.quick{display:flex;justify-content:space-between;margin:6px 0 16px}
+.quick div{text-align:center;font-size:12px;cursor:pointer}
+.quick .c{width:48px;height:48px;border-radius:50%;background:var(--blue);color:#fff;display:grid;place-items:center;margin:0 auto 6px;font-size:20px}
+.row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.row .grow{flex:1}.row small{color:var(--mut);display:block;font-size:12px}
+.pos{color:#0a9d58;font-weight:700}.neg{color:var(--red);font-weight:700}
+.cardlist{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:12px;display:flex;gap:12px;align-items:center;cursor:pointer}
+.cardlist small{color:var(--mut);display:block}
+.nav{display:flex;justify-content:space-around;border-top:1px solid var(--line);padding:8px 0 12px;background:#fff}
+.nav button{background:none;font-size:11px;color:var(--mut);display:flex;flex-direction:column;align-items:center;gap:2px}
+.nav button span{font-size:19px}.nav button.on{color:var(--blue);font-weight:700}
+.billicons{display:flex;justify-content:space-between;margin-bottom:12px}
+.billicons div{text-align:center;font-size:11px;color:var(--mut)}
+.billicons span{display:grid;place-items:center;width:44px;height:44px;border-radius:12px;background:#f1f4fb;font-size:20px;margin-bottom:4px}
+.amt{font-size:22px;color:var(--blue)}
+.vcard{background:linear-gradient(135deg,#0b4fe0,#06185a);color:#fff;border-radius:16px;padding:18px;margin:6px 0 14px}
+.vcard .chip{width:40px;height:30px;background:#f5c542;border-radius:6px;margin:14px 0}
+.vcard .num{letter-spacing:3px;font-size:18px;margin:6px 0}
+.tabs{display:flex;border-bottom:1px solid var(--line);margin-bottom:14px}
+.tabs button{flex:1;padding:10px;background:none;color:var(--mut);font-weight:600;border-bottom:3px solid transparent}
+.tabs button.on{color:var(--blue);border-color:var(--blue)}
+.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:#101828;color:#fff;padding:12px 18px;border-radius:10px;font-size:14px;z-index:99;max-width:90vw}
+.err{color:var(--red);font-size:13px;margin:-4px 0 10px}
+/* ADMIN */
+.adm{min-height:100vh;display:flex;background:#eef2f7}
+.side{width:230px;background:linear-gradient(180deg,#0f8a4b,#075f33);color:#fff;padding:18px 12px;flex:none;display:flex;flex-direction:column;gap:4px}
+.side h3{display:flex;align-items:center;gap:8px;padding:6px 10px 16px;font-size:16px}
+.side button{background:none;color:#e6fff1;text-align:left;padding:11px 12px;border-radius:8px;display:flex;gap:10px;font-size:14px}
+.side button.on,.side button:hover{background:rgba(255,255,255,.18);color:#fff}
+.main{flex:1;min-width:0;padding:22px}
+.mtop{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.burger{display:none;background:var(--green);color:#fff;border-radius:8px;padding:8px 12px;font-size:18px}
+.panel{background:#fff;border-radius:14px;padding:18px;box-shadow:0 2px 10px rgba(16,24,40,.06);margin-bottom:18px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:18px}
+.stat{background:#fff;border-radius:14px;padding:18px;display:flex;gap:14px;align-items:center;box-shadow:0 2px 10px rgba(16,24,40,.06)}
+.stat .ico{background:#e3f6ec;color:var(--green);width:44px;height:44px}
+.stat b{font-size:24px;display:block}
+.tbl{width:100%;border-collapse:collapse;font-size:13px}
+.tbl th{background:#eef3fb;text-align:left;padding:10px;color:var(--blue2);font-size:12px}
+.tbl td{padding:10px;border-bottom:1px solid var(--line)}
+.tblwrap{overflow-x:auto}
+.pill{padding:3px 10px;border-radius:99px;font-size:11px;font-weight:700;display:inline-block}
+.p-ok{background:#d7f5e4;color:#0a7a41}.p-wait{background:#fff0cf;color:#a86800}.p-bad{background:#fde1e1;color:#b42318}
+.sbar{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.sbar input,.sbar select{flex:1;min-width:140px;padding:10px 12px;border:1px solid var(--line);border-radius:8px}
+.gbtn{background:var(--green);color:#fff;padding:10px 14px;border-radius:8px;font-weight:700;font-size:13px}
+.mini{background:#eef3fb;color:var(--blue);padding:5px 9px;border-radius:6px;font-size:12px;margin-right:4px}
+.setrow{display:flex;align-items:center;gap:14px;padding:16px 8px;border-bottom:1px solid var(--line);cursor:pointer}
+.setrow:last-child{border:0}.setrow .grow{flex:1}
+.alogin{min-height:100vh;display:grid;place-items:center;padding:16px}
+.abox{background:#fff;border-radius:18px;padding:30px;width:100%;max-width:380px;text-align:center;border:3px solid #19b36b}
+.abox .logo{background:var(--green)}
+@media(max-width:820px){.side{position:fixed;inset:0 auto 0 0;z-index:50;transform:translateX(-100%);transition:.2s}.side.open{transform:none}.burger{display:block}.main{padding:14px}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="toast" class="toast hidden"></div>
+
+<script>
+/* ============ TEMPORARY DEMO LOGINS (frontend only — will be replaced by real backend auth) ============ */
+const DEMO={
+  admin:{username:'admin',password:'hujjujjuh'},
+  customer:{email:'confidenceanyira6@gmail.com',password:'hujjujjuh',name:'Confidence Anyira'}
+};
+
+const BANK='<svg viewBox="0 0 24 24"><path d="M12 2 2 7v2h20V7L12 2zM4 11v7H2v2h20v-2h-2v-7h-2v7h-3v-7h-2v7h-2v-7H9v7H6v-7H4z"/></svg>';
+const $=s=>document.querySelector(s);
+const app=$('#app');
+const money=n=>'$'+Number(n).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.remove('hidden');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.add('hidden'),2400)}
+function go(h){location.hash=h}
+
+/* ============ STATE ============ */
+const load=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))||d}catch(e){return d}};
+const save=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
+let sess=load('mb_sess',null);
+let reg=load('mb_reg',[]);
+let wallet=load('mb_wallet',{balance:2500,tx:[
+ {n:'Money Received',d:'Apr 24, 2025',a:500,i:'G'},
+ {n:'Electricity Bill',d:'Apr 21, 2025',a:-50,i:'E'},
+ {n:'Netflix',d:'Apr 19, 2025',a:-15,i:'N'}]});
+const bills=[
+ {n:'Power Company',d:'Due Apr 25',a:50,i:'⚡'},
+ {n:'Internet Provider',d:'Due Apr 20',a:20,i:'📶'},
+ {n:'DSTV',d:'Due Apr 30',a:45,i:'📺'}];
+let users=load('mb_users',[
+ {n:'John Doe',e:'john@domain.com',s:'Active'},
+ {n:'Jane Smith',e:'jane@domain.com',s:'Active'},
+ {n:'Mike Johnson',e:'mike@domain.com',s:'Suspended'},
+ {n:'David Brown',e:'david@domain.com',s:'Active'},
+ {n:'Confidence Anyira',e:'confidenceanyira6@gmail.com',s:'Active'}]);
+let atx=[
+ {id:'TRX001',u:'John Doe',t:'Deposit',a:5000,s:'Completed'},
+ {id:'TRX002',u:'Jane Smith',t:'Transfer',a:-200,s:'Completed'},
+ {id:'TRX003',u:'Sarah Johnson',t:'Withdrawal',a:-1700,s:'Pending'},
+ {id:'TRX004',u:'Mike Johnson',t:'Deposit',a:6000,s:'Completed'},
+ {id:'TRX005',u:'David Brown',t:'Deposit',a:600,s:'Completed'}];
+let kyc=load('mb_kyc',[
+ {id:'KYC01',u:'John Doe',t:'ID Card',s:'Pending'},
+ {id:'KYC02',u:'Jane Smith',t:'Passport',s:'Pending'},
+ {id:'KYC03',u:'Mike Johnson',t:'Driver License',s:'Pending'},
+ {id:'KYC04',u:'Sarah Wilson',t:'ID Card',s:'Verified'},
+ {id:'KYC05',u:'David Brown',t:'Passport',s:'Rejected'}]);
+const banks=[
+ ['John Doe','Zenith Bank','0123456789','Active'],['Jane Smith','GTBank','0987654321','Active'],
+ ['Mike Johnson','Access Bank','1234567800','Active'],['Sarah Wilson','UBA','4567890123','Active'],
+ ['David Brown','First Bank','7890123465','Active']];
+const persist=()=>{save('mb_wallet',wallet);save('mb_users',users);save('mb_kyc',kyc);save('mb_reg',reg)};
+let ui={ktab:'Pending',ttype:'All Types',ctab:'Cards',nav:false,q:''};
+
+/* ============ USER SCREENS ============ */
+const shell=(inner,cls='')=>`<div class="stage"><div class="phone"><div class="status"><span>9:41</span><span>▂▄▆ ▮</span></div>${inner}</div></div>`;
+const pnav=a=>`<div class="nav">${[['home','🏠','Home'],['cards','💳','Cards'],['transactions','🔁','Transaction'],['profile','👤','Profile']].map(x=>`<button class="${a===x[0]?'on':''}" onclick="go('#/${x[0]}')"><span>${x[1]}</span>${x[2]}</button>`).join('')}</div>`;
+const back=(t,to)=>`<div class="top"><button class="back" onclick="go('${to}')">←</button><h2>${t}</h2></div>`;
+
+const R={};
+R['splash']=()=>shell(`<div class="screen dark center" style="justify-content:center;gap:10px"><div class="logo">${BANK}</div><h1>MyBank App</h1><div class="sub" style="color:#c9d6ff">Banking • Payments • More</div><div style="height:140px"></div><button class="btn white" onclick="go('#/welcome')">Get Started</button><div style="font-size:12px;margin-top:10px">Already have an account? <b style="cursor:pointer" onclick="go('#/login')">Log In</b></div></div>`);
+R['welcome']=()=>shell(`<div class="screen center"><div style="font-size:64px;margin-top:20px">🛡️</div><h1 style="margin:10px 0 4px">Welcome to<br>MyBank App</h1><div class="sub">Simple . Secure . Convenient.</div><div style="text-align:left;margin:22px 8px"><div class="feat"><span class="ico">💼</span>Manage your money</div><div class="feat"><span class="ico">🔁</span>Send and receive money</div><div class="feat"><span class="ico">🧾</span>Pay bills and more</div></div><div style="flex:1"></div><button class="btn" onclick="go('#/signup')">Get Started</button></div>`);
+R['signup']=()=>shell(`<div class="screen"><div class="center" style="margin:10px 0 20px"><h2>Create Account</h2><div class="sub">Join MyBank today</div></div>
+<form onsubmit="return doSignup(event)"><input class="field" id="su_n" placeholder="Full Name" required><input class="field" id="su_e" type="email" placeholder="Email Address" required><input class="field" id="su_p" placeholder="Phone Number" required><input class="field" id="su_pw" type="password" placeholder="Password" minlength="6" required><div id="su_err" class="err"></div><button class="btn">Sign Up</button></form>
+<div class="center sub" style="margin-top:14px">Already have an account? <span class="link" onclick="go('#/login')">Log In</span></div></div>`);
+R['login']=()=>shell(`<div class="screen"><div class="center" style="margin:30px 0 24px"><h2>Welcome Back</h2><div class="sub">Login to your account</div></div>
+<form onsubmit="return doLogin(event)"><input class="field" id="lg_e" placeholder="Email or Phone Number" autocomplete="username" required><input class="field" id="lg_p" type="password" placeholder="Password" autocomplete="current-password" required><div style="text-align:right;margin:-4px 0 14px"><span class="link" style="font-size:12px" onclick="toast('Password reset will be available once the backend is connected')">Forgot Password?</span></div><div id="lg_err" class="err"></div><button class="btn">Log In</button></form>
+<div class="center sub" style="margin-top:14px">Don't have an account? <span class="link" onclick="go('#/signup')">Sign Up</span></div></div>`);
+R['home']=()=>shell(`<div class="screen"><div class="top" style="margin-bottom:6px"><span style="font-size:30px">🧑</span><div style="flex:1"><b>Good Morning, ${sess.name.split(' ')[0]}</b><div class="sub">Welcome back</div></div><span>🔍</span></div>
+<div class="bal"><div style="font-size:13px">Total Balance</div><b>${money(wallet.balance)}</b></div>
+<div class="quick">${[['Send','↗','#/send'],['Receive','↙','#/dsw'],['Deposit','⬇','#/dsw'],['More','🏦','#/dsw']].map(q=>`<div onclick="go('${q[2]}')"><div class="c">${q[1]}</div>${q[0]}</div>`).join('')}</div>
+<div style="display:flex;justify-content:space-between"><b>Recent Transactions</b><span class="link" style="font-size:13px" onclick="go('#/transactions')">See All</span></div>
+${wallet.tx.slice(0,4).map(txRow).join('')}<div style="flex:1"></div></div>${pnav('home')}`);
+const txRow=t=>`<div class="row"><span class="ico">${t.i}</span><div class="grow"><b>${t.n}</b><small>${t.d}</small></div><span class="${t.a>0?'pos':'neg'}">${t.a>0?'+':'-'}${money(Math.abs(t.a))}</span></div>`;
+R['dsw']=()=>shell(`<div class="screen">${back('Deposit / Send / Withdraw','#/home')}
+<div class="cardlist" onclick="amountAction('deposit')"><span class="ico">⬇</span><div><b>Deposit</b><small>Add money to your account</small></div></div>
+<div class="cardlist" onclick="go('#/send')"><span class="ico">↗</span><div><b>Send</b><small>Send money to others</small></div></div>
+<div class="cardlist" onclick="amountAction('withdraw')"><span class="ico">🏦</span><div><b>Withdraw</b><small>Withdraw to your bank or wallet</small></div></div></div>${pnav('home')}`);
+R['send']=()=>shell(`<div class="screen">${back('Send Money','#/dsw')}<form onsubmit="return doSend(event)"><label class="l">Recipient:</label><input class="field" id="sm_r" placeholder="Enter phone number or email" required><label class="l">Amount</label><input class="field amt" id="sm_a" type="number" step="0.01" min="0.01" placeholder="$ 0.00" required><label class="l">Note (Optional)</label><input class="field" id="sm_n" placeholder="Add a note"><div id="sm_err" class="err"></div><div style="height:30px"></div><button class="btn">Continue</button></form></div>`);
+R['bills']=()=>shell(`<div class="screen">${back('Pay Bills','#/home')}<div class="billicons"><div><span>💡</span>Electricity</div><div><span>💧</span>Internet</div><div><span>📶</span>Internet</div><div><span>📺</span>Cable & TV</div></div><b style="display:block;margin:8px 0">Recent Bills</b>
+${bills.map((b,i)=>`<div class="row" onclick="payBill(${i})" style="cursor:pointer"><span class="ico">${b.i}</span><div class="grow"><b>${b.n}</b><small>${b.d}</small></div><b>${money(b.a)}</b></div>`).join('')}</div>${pnav('home')}`);
+R['cards']=()=>shell(`<div class="screen">${back('My Card','#/home')}<div class="vcard"><b>MyBank</b><div class="chip"></div><div class="num">**** **** **** 1234</div><div style="display:flex;justify-content:space-between;font-size:12px"><span>${sess.name}</span><b>VISA</b></div></div><button class="btn out" onclick="go('#/bills')">Pay Bills</button></div>${pnav('cards')}`);
+R['transactions']=()=>shell(`<div class="screen">${back('Transactions','#/home')}${wallet.tx.map(txRow).join('')}</div>${pnav('transactions')}`);
+R['profile']=()=>shell(`<div class="screen center"><div style="font-size:64px;margin-top:20px">🧑</div><h2>${sess.name}</h2><div class="sub" style="margin-bottom:24px">${sess.email}</div><button class="btn out" onclick="go('#/bills')">Pay Bills</button><div style="height:12px"></div><button class="btn" onclick="logout()">Log Out</button></div>${pnav('profile')}`);
+
+/* ============ ADMIN SCREENS ============ */
+const ALINKS=[['dashboard','▦','Dashboard'],['users','👥','Users'],['txns','🔁','Transactions'],['kyc','🪪','KYC'],['cards','💳','Card Management'],['banks','🏦','Bank Accounts'],['settings','⚙','Settings']];
+const ashell=(act,title,body)=>`<div class="adm"><aside class="side ${ui.nav?'open':''}"><h3><span class="logo" style="width:30px;height:30px;border-radius:8px;background:#fff"><svg viewBox="0 0 24 24" style="width:18px;fill:#0f8a4b">${BANK.replace(/<\/?svg[^>]*>/g,'')}</svg></span>MyBank Admin</h3>${ALINKS.map(l=>`<button class="${act===l[0]?'on':''}" onclick="ui.nav=false;go('#/admin/${l[0]}')"><span>${l[1]}</span>${l[2]}</button>`).join('')}<button onclick="logout()"><span>⏻</span>Logout</button></aside><div class="main"><div class="mtop"><button class="burger" onclick="ui.nav=!ui.nav;render()">☰</button><h1 style="font-size:22px">${title}</h1></div>${body}</div></div>`;
+const pill=s=>`<span class="pill ${['Active','Completed','Verified'].includes(s)?'p-ok':['Pending'].includes(s)?'p-wait':'p-bad'}">${s}</span>`;
+
+R['admin']=()=>`<div class="alogin"><form class="abox" onsubmit="return doAdmin(event)"><div class="logo">${BANK}</div><h2 style="margin-top:14px">Admin Login</h2><div class="sub" style="margin-bottom:22px">Secure access only</div><input class="field" id="ad_u" placeholder="Username" autocomplete="username" required><input class="field" id="ad_p" type="password" placeholder="Password" autocomplete="current-password" required><div id="ad_err" class="err"></div><button class="btn green">Login</button><div class="link" style="color:var(--green);margin-top:14px;font-size:13px" onclick="toast('Password reset will be available once the backend is connected')">Forgot Password?</div></form></div>`;
+R['admin/dashboard']=()=>ashell('dashboard','Dashboard',`<div class="stats"><div class="stat"><span class="ico">👤</span><div><span class="sub">Total Users</span><b>2,445,200</b></div></div><div class="stat"><span class="ico">✔</span><div><span class="sub">Total Transactions</span><b>12,450</b></div></div></div><div class="panel"><b>User Growth</b><div class="sub">Last 30 days</div><svg viewBox="0 0 400 140" style="width:100%;margin-top:10px"><defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0f8a4b" stop-opacity=".35"/><stop offset="1" stop-color="#0f8a4b" stop-opacity="0"/></linearGradient></defs><path d="M0 120 L40 110 L80 114 L120 90 L160 96 L200 70 L240 76 L280 48 L320 54 L360 28 L400 20 L400 140 L0 140Z" fill="url(#g)"/><path d="M0 120 L40 110 L80 114 L120 90 L160 96 L200 70 L240 76 L280 48 L320 54 L360 28 L400 20" fill="none" stroke="#0f8a4b" stroke-width="3"/></svg></div>`);
+R['admin/users']=()=>{const q=ui.q.toLowerCase();return ashell('users','Users',`<div class="panel"><div class="sbar"><input placeholder="Search user..." value="${ui.q}" oninput="ui.q=this.value;render(true)" id="usr_q"><button class="gbtn" onclick="addUser()">+ Add User</button></div><div class="tblwrap"><table class="tbl"><tr><th>Name</th><th>Email</th><th>Status</th><th>Actions</th></tr>${users.map((u,i)=>[u,i]).filter(([u])=>(u.n+u.e).toLowerCase().includes(q)).map(([u,i])=>`<tr><td>${u.n}</td><td>${u.e}</td><td>${pill(u.s)}</td><td><button class="mini" onclick="toggleUser(${i})">${u.s==='Active'?'Suspend':'Activate'}</button></td></tr>`).join('')}</table></div></div>`)};
+R['admin/txns']=()=>{const f=atx.filter(t=>ui.ttype==='All Types'||t.t===ui.ttype);return ashell('txns','Transactions',`<div class="panel"><div class="sbar"><select onchange="ui.ttype=this.value;render()">${['All Types','Deposit','Transfer','Withdrawal'].map(o=>`<option ${o===ui.ttype?'selected':''}>${o}</option>`).join('')}</select><select><option>Today</option><option>This week</option><option>This month</option></select></div><div class="tblwrap"><table class="tbl"><tr><th>ID</th><th>User</th><th>Type</th><th>Amount</th><th>Status</th></tr>${f.map(t=>`<tr><td>${t.id}</td><td>${t.u}</td><td>${t.t}</td><td class="${t.a>0?'pos':'neg'}">${t.a>0?'+':'-'}${money(Math.abs(t.a))}</td><td>${pill(t.s)}</td></tr>`).join('')}</table></div></div>`)};
+R['admin/kyc']=()=>{const c=s=>kyc.filter(k=>k.s===s).length;const f=kyc.map((k,i)=>[k,i]).filter(([k])=>k.s===ui.ktab);return ashell('kyc','KYC Verification',`<div class="panel"><div class="tabs">${[['Pending',130],['Verified','2,450'],['Rejected',50]].map(t=>`<button class="${ui.ktab===t[0]?'on':''}" onclick="ui.ktab='${t[0]}';render()">${t[0]} (${t[1]})</button>`).join('')}</div><div class="tblwrap"><table class="tbl"><tr><th>ID</th><th>User</th><th>Type</th><th>Status</th><th>Action</th></tr>${f.length?f.map(([k,i])=>`<tr><td>${k.id}</td><td>${k.u}</td><td>${k.t}</td><td>${pill(k.s)}</td><td>${k.s==='Pending'?`<button class="mini" onclick="setKyc(${i},'Verified')">Approve</button><button class="mini" onclick="setKyc(${i},'Rejected')">Reject</button>`:'—'}</td></tr>`).join(''):'<tr><td colspan="5" class="sub">Nothing here</td></tr>'}</table></div></div>`)};
+R['admin/cards']=()=>ashell('cards','Card Details',`<div class="panel"><div class="tabs">${['Cards','Transactions'].map(t=>`<button class="${ui.ctab===t?'on':''}" onclick="ui.ctab='${t}';render()">${t}</button>`).join('')}</div>${ui.ctab==='Cards'?`<div class="vcard" style="max-width:420px"><b>MyBank</b><div class="chip"></div><div class="num">**** **** **** 1234</div><div style="display:flex;justify-content:space-between;font-size:12px"><span>John Doe</span><b>VISA</b></div></div><div style="display:flex;gap:10px;max-width:420px"><button class="btn sm out" style="flex:1" onclick="toast('Card details open here once backend is connected')">View Details</button><button class="btn sm" style="flex:1" onclick="toast('Card editing opens here once backend is connected')">Edit Card</button></div><div style="display:flex;justify-content:space-between;max-width:420px;margin-top:16px"><div><span class="sub">Card Holder</span><br><b>John Doe</b></div><div><span class="sub">Expiry Date</span><br><b>12/28</b></div></div>`:`<div class="tblwrap"><table class="tbl"><tr><th>ID</th><th>User</th><th>Amount</th><th>Status</th></tr>${atx.slice(0,3).map(t=>`<tr><td>${t.id}</td><td>${t.u}</td><td>${money(Math.abs(t.a))}</td><td>${pill(t.s)}</td></tr>`).join('')}</table></div>`}</div>`);
+R['admin/banks']=()=>ashell('banks','Bank Accounts',`<div class="panel"><div class="tblwrap"><table class="tbl"><tr><th>User</th><th>Bank Name</th><th>Account Number</th><th>Status</th></tr>${banks.map(b=>`<tr><td>${b[0]}</td><td>${b[1]}</td><td>${b[2]}</td><td>${pill(b[3])}</td></tr>`).join('')}</table></div></div>`);
+R['admin/settings']=()=>ashell('settings','Admin Settings',`<div class="panel">${[['⚙','System Settings'],['👥','User Roles'],['🛡','Security Logs'],['🔑','API Keys'],['☁','Backup & Restore'],['🔔','Notifications']].map(s=>`<div class="setrow" onclick="toast('${s[1]} will be connected with the backend')"><span class="ico" style="background:#e3f6ec;color:var(--green)">${s[0]}</span><b class="grow">${s[1]}</b><span>›</span></div>`).join('')}</div>`);
+
+/* ============ ACTIONS ============ */
+function doLogin(e){e.preventDefault();const id=$('#lg_e').value.trim().toLowerCase(),pw=$('#lg_p').value;
+ let u=null;if(id===DEMO.customer.email&&pw===DEMO.customer.password)u={name:DEMO.customer.name,email:DEMO.customer.email};
+ else{const r=reg.find(x=>(x.email.toLowerCase()===id||x.phone===id)&&x.pw===pw);if(r)u={name:r.name,email:r.email}}
+ if(!u){$('#lg_err').textContent='Incorrect email/phone or password.';return false}
+ sess={role:'user',...u};save('mb_sess',sess);go('#/home');return false}
+function doSignup(e){e.preventDefault();const email=$('#su_e').value.trim();
+ if(reg.some(r=>r.email.toLowerCase()===email.toLowerCase())||email.toLowerCase()===DEMO.customer.email){$('#su_err').textContent='An account with this email already exists.';return false}
+ reg.push({name:$('#su_n').value.trim(),email,phone:$('#su_p').value.trim(),pw:$('#su_pw').value});users.push({n:$('#su_n').value.trim(),e:email,s:'Active'});persist();toast('Account created. Please log in.');go('#/login');return false}
+function doAdmin(e){e.preventDefault();if($('#ad_u').value.trim()===DEMO.admin.username&&$('#ad_p').value===DEMO.admin.password){sess={role:'admin'};save('mb_sess',sess);go('#/admin/dashboard')}else $('#ad_err').textContent='Invalid username or password.';return false}
+function logout(){const a=sess&&sess.role==='admin';sess=null;localStorage.removeItem('mb_sess');go(a?'#/admin':'#/login')}
+function doSend(e){e.preventDefault();const a=parseFloat($('#sm_a').value);if(a>wallet.balance){$('#sm_err').textContent='Insufficient balance.';return false}
+ wallet.balance-=a;wallet.tx.unshift({n:'Sent to '+$('#sm_r').value,d:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),a:-a,i:'↗'});persist();toast('Transfer of '+money(a)+' sent');go('#/home');return false}
+function amountAction(k){const v=parseFloat(prompt((k==='deposit'?'Deposit':'Withdraw')+' amount ($)'));if(!(v>0))return;
+ if(k==='withdraw'&&v>wallet.balance){toast('Insufficient balance');return}
+ wallet.balance+=k==='deposit'?v:-v;wallet.tx.unshift({n:k==='deposit'?'Deposit':'Withdrawal',d:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),a:k==='deposit'?v:-v,i:k==='deposit'?'⬇':'🏦'});persist();toast('Done');go('#/home')}
+function payBill(i){const b=bills[i];if(b.a>wallet.balance){toast('Insufficient balance');return}
+ if(!confirm('Pay '+b.n+' '+money(b.a)+'?'))return;wallet.balance-=b.a;wallet.tx.unshift({n:b.n,d:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),a:-b.a,i:b.i});persist();toast('Bill paid');go('#/home')}
+function addUser(){const n=prompt('Full name');if(!n)return;const e=prompt('Email');if(!e)return;users.push({n,e,s:'Active'});persist();render()}
+function toggleUser(i){users[i].s=users[i].s==='Active'?'Suspended':'Active';persist();render()}
+function setKyc(i,s){kyc[i].s=s;persist();render()}
+
+/* ============ ROUTER ============ */
+function render(keepFocus){
+ let r=(location.hash||'#/splash').slice(2);
+ if(!R[r])r='splash';
+ const isAdmin=r.startsWith('admin');
+ if(isAdmin&&r!=='admin'&&!(sess&&sess.role==='admin')){go('#/admin');return}
+ if(!isAdmin&&!['splash','welcome','signup','login'].includes(r)&&!(sess&&sess.role==='user')){go('#/login');return}
+ if(sess&&sess.role==='user'&&['splash','welcome','login','signup'].includes(r)&&false){}
+ app.innerHTML=R[r]();
+ if(keepFocus){const q=$('#usr_q');if(q){q.focus();q.setSelectionRange(q.value.length,q.value.length)}}
+}
+window.addEventListener('hashchange',()=>{ui.nav=false;render()});
+render();
+</script>
+</body>
+</html>
