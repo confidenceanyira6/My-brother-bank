@@ -161,7 +161,7 @@ R['signup']=()=>shell(`<div class="screen"><div class="center" style="margin:10p
 <form onsubmit="return doSignup(event)"><input class="field" id="su_n" placeholder="Full Name" required><input class="field" id="su_e" type="email" placeholder="Email Address" required><input class="field" id="su_p" placeholder="Phone Number" required><input class="field" id="su_pw" type="password" placeholder="Password" minlength="6" required><div id="su_err" class="err"></div><button class="btn">Sign Up</button></form>
 <div class="center sub" style="margin-top:14px">Already have an account? <span class="link" onclick="go('#/login')">Log In</span></div></div>`);
 R['login']=()=>shell(`<div class="screen"><div class="center" style="margin:30px 0 24px"><h2>Welcome Back</h2><div class="sub">Login to your account</div></div>
-<form onsubmit="return doLogin(event)"><input class="field" id="lg_e" placeholder="Email or Phone Number" autocomplete="username" required><input class="field" id="lg_p" type="password" placeholder="Password" autocomplete="current-password" required><div style="text-align:right;margin:-4px 0 14px"><span class="link" style="font-size:12px" onclick="toast('Password reset will be available once the backend is connected')">Forgot Password?</span></div><div id="lg_err" class="err"></div><button class="btn">Log In</button></form>
+<form onsubmit="return doLogin(event)"><input class="field" id="lg_e" placeholder="Email, Phone or Username" autocomplete="username" required><input class="field" id="lg_p" type="password" placeholder="Password" autocomplete="current-password" required><div style="text-align:right;margin:-4px 0 14px"><span class="link" style="font-size:12px" onclick="toast('Password reset will be available once the backend is connected')">Forgot Password?</span></div><div id="lg_err" class="err"></div><button class="btn">Log In</button></form>
 <div class="center sub" style="margin-top:14px">Don't have an account? <span class="link" onclick="go('#/signup')">Sign Up</span></div></div>`);
 R['home']=()=>shell(`<div class="screen"><div class="top" style="margin-bottom:6px"><span style="font-size:30px">🧑</span><div style="flex:1"><b>Good Morning, ${sess.name.split(' ')[0]}</b><div class="sub">Welcome back</div></div><span>🔍</span></div>
 <div class="bal"><div style="font-size:13px">Total Balance</div><b>${money(wallet.balance)}</b></div>
@@ -185,7 +185,6 @@ const ALINKS=[['dashboard','▦','Dashboard'],['users','👥','Users'],['txns','
 const ashell=(act,title,body)=>`<div class="adm"><aside class="side ${ui.nav?'open':''}"><h3><span class="logo" style="width:30px;height:30px;border-radius:8px;background:#fff"><svg viewBox="0 0 24 24" style="width:18px;fill:#0f8a4b">${BANK.replace(/<\/?svg[^>]*>/g,'')}</svg></span>MyBank Admin</h3>${ALINKS.map(l=>`<button class="${act===l[0]?'on':''}" onclick="ui.nav=false;go('#/admin/${l[0]}')"><span>${l[1]}</span>${l[2]}</button>`).join('')}<button onclick="logout()"><span>⏻</span>Logout</button></aside><div class="main"><div class="mtop"><button class="burger" onclick="ui.nav=!ui.nav;render()">☰</button><h1 style="font-size:22px">${title}</h1></div>${body}</div></div>`;
 const pill=s=>`<span class="pill ${['Active','Completed','Verified'].includes(s)?'p-ok':['Pending'].includes(s)?'p-wait':'p-bad'}">${s}</span>`;
 
-R['admin']=()=>`<div class="alogin"><form class="abox" onsubmit="return doAdmin(event)"><div class="logo">${BANK}</div><h2 style="margin-top:14px">Admin Login</h2><div class="sub" style="margin-bottom:22px">Secure access only</div><input class="field" id="ad_u" placeholder="Username" autocomplete="username" required><input class="field" id="ad_p" type="password" placeholder="Password" autocomplete="current-password" required><div id="ad_err" class="err"></div><button class="btn green">Login</button><div class="link" style="color:var(--green);margin-top:14px;font-size:13px" onclick="toast('Password reset will be available once the backend is connected')">Forgot Password?</div></form></div>`;
 R['admin/dashboard']=()=>ashell('dashboard','Dashboard',`<div class="stats"><div class="stat"><span class="ico">👤</span><div><span class="sub">Total Users</span><b>2,445,200</b></div></div><div class="stat"><span class="ico">✔</span><div><span class="sub">Total Transactions</span><b>12,450</b></div></div></div><div class="panel"><b>User Growth</b><div class="sub">Last 30 days</div><svg viewBox="0 0 400 140" style="width:100%;margin-top:10px"><defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0f8a4b" stop-opacity=".35"/><stop offset="1" stop-color="#0f8a4b" stop-opacity="0"/></linearGradient></defs><path d="M0 120 L40 110 L80 114 L120 90 L160 96 L200 70 L240 76 L280 48 L320 54 L360 28 L400 20 L400 140 L0 140Z" fill="url(#g)"/><path d="M0 120 L40 110 L80 114 L120 90 L160 96 L200 70 L240 76 L280 48 L320 54 L360 28 L400 20" fill="none" stroke="#0f8a4b" stroke-width="3"/></svg></div>`);
 R['admin/users']=()=>{const q=ui.q.toLowerCase();return ashell('users','Users',`<div class="panel"><div class="sbar"><input placeholder="Search user..." value="${ui.q}" oninput="ui.q=this.value;render(true)" id="usr_q"><button class="gbtn" onclick="addUser()">+ Add User</button></div><div class="tblwrap"><table class="tbl"><tr><th>Name</th><th>Email</th><th>Status</th><th>Actions</th></tr>${users.map((u,i)=>[u,i]).filter(([u])=>(u.n+u.e).toLowerCase().includes(q)).map(([u,i])=>`<tr><td>${u.n}</td><td>${u.e}</td><td>${pill(u.s)}</td><td><button class="mini" onclick="toggleUser(${i})">${u.s==='Active'?'Suspend':'Activate'}</button></td></tr>`).join('')}</table></div></div>`)};
 R['admin/txns']=()=>{const f=atx.filter(t=>ui.ttype==='All Types'||t.t===ui.ttype);return ashell('txns','Transactions',`<div class="panel"><div class="sbar"><select onchange="ui.ttype=this.value;render()">${['All Types','Deposit','Transfer','Withdrawal'].map(o=>`<option ${o===ui.ttype?'selected':''}>${o}</option>`).join('')}</select><select><option>Today</option><option>This week</option><option>This month</option></select></div><div class="tblwrap"><table class="tbl"><tr><th>ID</th><th>User</th><th>Type</th><th>Amount</th><th>Status</th></tr>${f.map(t=>`<tr><td>${t.id}</td><td>${t.u}</td><td>${t.t}</td><td class="${t.a>0?'pos':'neg'}">${t.a>0?'+':'-'}${money(Math.abs(t.a))}</td><td>${pill(t.s)}</td></tr>`).join('')}</table></div></div>`)};
@@ -196,15 +195,16 @@ R['admin/settings']=()=>ashell('settings','Admin Settings',`<div class="panel">$
 
 /* ============ ACTIONS ============ */
 function doLogin(e){e.preventDefault();const id=$('#lg_e').value.trim().toLowerCase(),pw=$('#lg_p').value;
+ if(id===DEMO.admin.username&&pw===DEMO.admin.password){sess={role:'admin'};save('mb_sess',sess);go('#/admin/dashboard');return false}
  let u=null;if(id===DEMO.customer.email&&pw===DEMO.customer.password)u={name:DEMO.customer.name,email:DEMO.customer.email};
  else{const r=reg.find(x=>(x.email.toLowerCase()===id||x.phone===id)&&x.pw===pw);if(r)u={name:r.name,email:r.email}}
  if(!u){$('#lg_err').textContent='Incorrect email/phone or password.';return false}
  sess={role:'user',...u};save('mb_sess',sess);go('#/home');return false}
 function doSignup(e){e.preventDefault();const email=$('#su_e').value.trim();
+ if(/^admin(@|$)/i.test(email)){$('#su_err').textContent='This email is reserved.';return false}
  if(reg.some(r=>r.email.toLowerCase()===email.toLowerCase())||email.toLowerCase()===DEMO.customer.email){$('#su_err').textContent='An account with this email already exists.';return false}
  reg.push({name:$('#su_n').value.trim(),email,phone:$('#su_p').value.trim(),pw:$('#su_pw').value});users.push({n:$('#su_n').value.trim(),e:email,s:'Active'});persist();toast('Account created. Please log in.');go('#/login');return false}
-function doAdmin(e){e.preventDefault();if($('#ad_u').value.trim()===DEMO.admin.username&&$('#ad_p').value===DEMO.admin.password){sess={role:'admin'};save('mb_sess',sess);go('#/admin/dashboard')}else $('#ad_err').textContent='Invalid username or password.';return false}
-function logout(){const a=sess&&sess.role==='admin';sess=null;localStorage.removeItem('mb_sess');go(a?'#/admin':'#/login')}
+function logout(){sess=null;localStorage.removeItem('mb_sess');go('#/login')}
 function doSend(e){e.preventDefault();const a=parseFloat($('#sm_a').value);if(a>wallet.balance){$('#sm_err').textContent='Insufficient balance.';return false}
  wallet.balance-=a;wallet.tx.unshift({n:'Sent to '+$('#sm_r').value,d:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),a:-a,i:'↗'});persist();toast('Transfer of '+money(a)+' sent');go('#/home');return false}
 function amountAction(k){const v=parseFloat(prompt((k==='deposit'?'Deposit':'Withdraw')+' amount ($)'));if(!(v>0))return;
@@ -219,11 +219,12 @@ function setKyc(i,s){kyc[i].s=s;persist();render()}
 /* ============ ROUTER ============ */
 function render(keepFocus){
  let r=(location.hash||'#/splash').slice(2);
- if(!R[r])r='splash';
- const isAdmin=r.startsWith('admin');
- if(isAdmin&&r!=='admin'&&!(sess&&sess.role==='admin')){go('#/admin');return}
- if(!isAdmin&&!['splash','welcome','signup','login'].includes(r)&&!(sess&&sess.role==='user')){go('#/login');return}
- if(sess&&sess.role==='user'&&['splash','welcome','login','signup'].includes(r)&&false){}
+ if(!R[r]||r==='admin')r=r==='admin'?'login':'splash';
+ const isAdmin=r.startsWith('admin/');
+ const pub=['splash','welcome','signup','login'].includes(r);
+ if(isAdmin&&!(sess&&sess.role==='admin')){go('#/login');return}
+ if(!isAdmin&&!pub&&!(sess&&sess.role==='user')){go('#/login');return}
+ if(pub&&r==='login'&&sess){go(sess.role==='admin'?'#/admin/dashboard':'#/home');return}
  app.innerHTML=R[r]();
  if(keepFocus){const q=$('#usr_q');if(q){q.focus();q.setSelectionRange(q.value.length,q.value.length)}}
 }
