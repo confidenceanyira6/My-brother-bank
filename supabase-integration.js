@@ -84,8 +84,8 @@
 
   async function fetchRows(table, userId, isAdmin) {
     let query = sb.from(table).select("*").limit(1000);
-    if (!isAdmin && userId) {
-      const ownerColumn = table === "profiles" ? "id" : table === "identity_checks" ? "user_id" : "user_id";
+    if (!isAdmin && userId && table !== "investment_plans") {
+      const ownerColumn = table === "profiles" ? "id" : "user_id";
       query = query.eq(ownerColumn, userId);
     }
     const { data, error } = await query;
@@ -296,8 +296,8 @@
         toast("Account created. Confirm your email, then log in to finish enrollment.");
       }
       go("#/login");
-    } catch (err) {
-      err("Enrollment failed: " + (err.message || "Please try again."));
+    } catch (error) {
+      message("su_err", "Enrollment failed: " + (error.message || "Please try again."));
     }
     return false;
   };
