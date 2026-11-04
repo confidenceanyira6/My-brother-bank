@@ -540,7 +540,7 @@ function doSignup(e){e.preventDefault();
  const dob=new Date(v('su_dob')+'T00:00:00'),lim=new Date();lim.setFullYear(lim.getFullYear()-18);
  if(isNaN(dob)||dob.getFullYear()<1900)return err('Enter a valid date of birth.');
  if(dob>lim)return err('You must be at least 18 years old to open an account.');
- const ssn=$('#su_ssn').value.replace(/[\s-]/g,'');if(!/^[A-Za-z0-9]{4,20}$/.test(ssn))return err('Enter a valid Social Security Number / Tax ID.');
+ const nin=$('#su_nin').value.trim(),bvn=$('#su_bvn').value.trim(),idNumber=$('#su_id').value.trim();if(!nin||!bvn||!idNumber)return err('Enter your NIN, BVN and ID number.');
  const cs=$('#su_city').value,city=cs==='__o'?v('su_city_o'):cs;if(!city)return err('Please choose or type your city.');
  if(!PHONE.test(v('nk_p'))||v('nk_p').replace(/\D/g,'').length<7)return err("Enter a valid phone number for your next of kin.");
  const pw=$('#su_pw').value;if(pw.length<8)return err('Password must be at least 8 characters.');
