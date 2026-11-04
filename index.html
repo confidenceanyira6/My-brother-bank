@@ -530,7 +530,7 @@ function fillCities(){const c=$('#su_country').value,s=$('#su_city');
  if(!list.length)s.value='__o';cityPick()}
 function cityPick(){$('#su_city_o').classList.toggle('hidden',$('#su_city').value!=='__o')}
 const OKMIME=['image/png','image/jpeg','image/gif'];
-function checkFile(inp){const f=inp.files[0];if(!f)return 'Please upload this file.';const pdf=inp.dataset.pdf==='1';
+function checkFile(inp){const f=inp.files[0];if(!f)return '';const pdf=inp.dataset.pdf==='1';
  const ext=f.name.split('.').pop().toLowerCase();const exts=pdf?['pdf','png','jpg','jpeg','gif']:['png','jpg','jpeg','gif'];const mimes=pdf?OKMIME.concat('application/pdf'):OKMIME;
  if(!exts.includes(ext)||(f.type&&!mimes.includes(f.type)))return 'Unsupported file type. Use '+(pdf?'PDF, PNG, JPG or GIF.':'PNG, JPG or GIF.');
  if(f.size>5*1024*1024)return 'That file is larger than 5 MB.';return ''}
