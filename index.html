@@ -325,8 +325,10 @@ ${F('su_e','Email','required autocomplete="email" maxlength="120"','email')}
 ${F('su_p','Phone','required autocomplete="tel" inputmode="tel" maxlength="20"','tel')}
 ${F('su_dob','Date of Birth',`required min="1900-01-01" max="${maxDob()}"`,'date')}
 ${SEL('su_g','Gender',['Male','Female','Other','Prefer not to say'],'Select')}
-${F('su_ssn','Social Security Number / Tax ID','required autocomplete="off" maxlength="20"','password')}
-<div class="hint">Only the last 4 characters are kept on this device.</div>
+${F('su_nin','National Identification Number (NIN)','required autocomplete="off" maxlength="20"','password')}
+${F('su_bvn','Bank Verification Number (BVN)','required autocomplete="off" maxlength="20"','password')}
+${F('su_id','ID Number','required autocomplete="off" maxlength="30"','password')}
+<div class="hint">Only the last four characters of these identifiers are stored by the backend.</div>
 ${F('su_occ','Occupation','required maxlength="60"')}
 </div>
 <div class="sec"><div class="sech">${I('home',17)}Contact Information</div>
@@ -360,7 +362,7 @@ ${FILE('su_doc','Upload Document','application/pdf,image/png,image/jpeg,image/gi
 <div class="center sub" style="margin:14px 0 4px">Already have an account? <span class="link" onclick="go('#/login')">Log In</span></div></div>`);
 
 R['login']=()=>shell(`<div class="screen"><div class="center" style="margin:30px 0 24px"><h2>Welcome Back</h2><div class="sub">Login to your account</div></div>
-<form onsubmit="return doLogin(event)"><input class="field" id="lg_e" placeholder="Email, Phone or Username" autocomplete="username" required><input class="field" id="lg_p" type="password" placeholder="Password" autocomplete="current-password" required><div style="text-align:right;margin:-4px 0 14px"><span class="link" style="font-size:12px" onclick="toast('Password reset will be available once the backend is connected')">Forgot Password?</span></div><div id="lg_err" class="err"></div><button class="btn">Log In</button></form>
+<form onsubmit="return doLogin(event)"><input class="field" id="lg_e" placeholder="Email, Phone or Username" autocomplete="username" required><input class="field" id="lg_p" type="password" placeholder="Password" autocomplete="current-password" required><div style="text-align:right;margin:-4px 0 14px"><span class="link" style="font-size:12px" onclick="resetBankPassword()">Forgot Password?</span></div><div id="lg_err" class="err"></div><button class="btn">Log In</button></form>
 <div class="center sub" style="margin-top:14px">Don't have an account? <span class="link" onclick="go('#/signup')">Sign Up</span></div></div>`);
 
 const greet=()=>{const h=new Date().getHours();return h<12?'Good morning':h<17?'Good afternoon':'Good evening'};
@@ -379,7 +381,7 @@ ${ks==='Pending'?`<div class="note">${I('shield',18)}<div>Identity verification 
 <div class="sech2"><b>Recent Transactions</b><span class="link" style="font-size:13px" onclick="go('#/transactions')">See All</span></div>
 ${wallet.tx.length?wallet.tx.slice(0,4).map(txRow).join(''):'<div class="empty">No transactions yet.</div>'}<div style="flex:1"></div></div>${pnav('home')}`)};
 
-R['send']=()=>shell(`<div class="screen">${back('Send Money','#/home')}<form onsubmit="return doSend(event)"><label class="l">Recipient</label><input class="field" id="sm_r" placeholder="Enter phone number or email" required><label class="l">Amount</label><input class="field amt" id="sm_a" type="number" step="0.01" min="0.01" placeholder="${esc(sym())}0.00" required><label class="l">Note (Optional)</label><input class="field" id="sm_n" placeholder="Add a note" maxlength="80"><div id="sm_err" class="err"></div><div style="height:20px"></div><button class="btn">Continue</button></form></div>${pnav('home')}`);
+R['send']=()=>shell(`<div class="screen">${back('Send Money','#/home')}<form onsubmit="return doSend(event)"><label class="l">Recipient</label><input class="field" id="sm_r" placeholder="Enter recipient account number" required><label class="l">Amount</label><input class="field amt" id="sm_a" type="number" step="0.01" min="0.01" placeholder="${esc(sym())}0.00" required><label class="l">Note (Optional)</label><input class="field" id="sm_n" placeholder="Add a note" maxlength="80"><div id="sm_err" class="err"></div><div style="height:20px"></div><button class="btn">Continue</button></form></div>${pnav('home')}`);
 
 R['withdraw']=()=>{
  const ks=kycOf(),mine=wds.filter(w=>w.e===sess.email);
@@ -394,7 +396,7 @@ ${gate}
 <label class="l">Account Holder Name</label><input class="field" id="wd_h" maxlength="80" required>
 <label class="l">SWIFT / Routing / Sort Code (Optional)</label><input class="field" id="wd_c" maxlength="20">
 <label class="l">Narration (Optional)</label><input class="field" id="wd_m" maxlength="80">
-<label class="l">Transaction PIN</label><input class="field" id="wd_p" type="password" inputmode="numeric" maxlength="4" pattern="[0-9]{4}" placeholder="4-digit PIN" autocomplete="off" required>
+<div class="hint">Only the last four characters of the destination account reference are sent to the backend.</div>
 <div class="hint">Withdrawals are reviewed by our team. You will be notified here once yours is processed.</div>
 <div id="wd_err" class="err" role="alert"></div><button class="btn">Withdraw</button></form>
 ${mine.length?`<div class="mini2">Your withdrawal requests</div>${mine.slice().reverse().map(w=>`<div class="row"><span class="ico">${I('withdraw',17)}</span><div class="grow"><b>${fmt(w.amt,w.cur)}</b><small>${esc(w.bank)} · ${esc(w.date)}</small></div>${pill(w.s)}</div>`).join('')}`:''}
@@ -710,5 +712,8 @@ function render(keepFocus){
 window.addEventListener('hashchange',()=>{ui.nav=false;render()});
 render();
 </script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="./supabase-integration.js"></script>
 </body>
 </html>
